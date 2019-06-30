@@ -16,23 +16,23 @@ public class MatrixPanel extends JPanel {
     protected Cell<FilterDirection>[] txCells;
     protected Cell<FilterDirection>[] rxCells;
     protected Cell<FilterDirection>[][] matrixCells;
-    protected int N;
+    protected int noOfLinks;
     protected FilterDirection last;
 
 
     public void refresh() {
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < noOfLinks; i++) {
             Cell<?> tx = txCells[i];
             tx.setSelected(getModel().getTx()[i]);
         }
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < noOfLinks; i++) {
             Cell<?> rx = rxCells[i];
             rx.setSelected(getModel().getRx()[i]);
         }
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        for (int i = 0; i < noOfLinks; i++) {
+            for (int j = 0; j < noOfLinks; j++) {
                 Cell<FilterDirection> cell = matrixCells[i][j];
                 cell.setSelected(getModel().getMatrix()[i][j]);
             }
@@ -42,10 +42,10 @@ public class MatrixPanel extends JPanel {
 
 
     public void updatePanel() {
-        this.N = model == null ? 0 : model.getMatrix().length;
-        txCells = new Cell[N];
-        rxCells = new Cell[N];
-        matrixCells = new Cell[N][N];
+        this.noOfLinks = model == null ? 0 : model.getMatrix().length;
+        txCells = new Cell[noOfLinks];
+        rxCells = new Cell[noOfLinks];
+        matrixCells = new Cell[noOfLinks][noOfLinks];
 
         removeAll();
         setLayout(new GridBagLayout());
@@ -58,7 +58,7 @@ public class MatrixPanel extends JPanel {
 
         gc.fill = GridBagConstraints.BOTH;
         Dimension txDimension = new Dimension(40, 120);
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < noOfLinks; i++) {
             Cell<FilterDirection> tx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.TX, -1, i), getModel().getLinks()[i], true);
             tx.setHoverEnabled(false);
             txCells[i] = tx;
@@ -72,7 +72,7 @@ public class MatrixPanel extends JPanel {
 
         Dimension rxDimension = new Dimension(120, 40);
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < noOfLinks; i++) {
             Cell<FilterDirection> rx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.RX, i, -1), getModel().getLinks()[i], false);
             rx.setHoverEnabled(false);
             rxCells[i] = rx;
@@ -88,8 +88,8 @@ public class MatrixPanel extends JPanel {
 
         Dimension d = new Dimension(40, 40);
         gc.fill = GridBagConstraints.NONE;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        for (int i = 0; i < noOfLinks; i++) {
+            for (int j = 0; j < noOfLinks; j++) {
                 Cell<FilterDirection> cell = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.ROUTING, i, j), Cell.TICK, "", false);
                 cell.setPreferredSize(d);
                 cell.setMinimumSize(d);
@@ -109,22 +109,16 @@ public class MatrixPanel extends JPanel {
                         FilterDirection fd = cell.getData();
                         rxCells[fd.getFrom()].dehighlight();
                         txCells[fd.getTo()].dehighlight();
-
                         last = null;
                     }
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-
-                        if (e.getButton() == MouseEvent.BUTTON1) {
-                            if (cell.isHoverEnabled()) {
-                                cell.highlight();
-                                last = cell.getData();
-                            }
+                        if (e.getButton() == MouseEvent.BUTTON1 && cell.isHoverEnabled()) {
+                            cell.highlight();
+                            last = cell.getData();
                         }
                         super.mousePressed(e);
-
-
                     }
                 });
 
@@ -145,8 +139,8 @@ public class MatrixPanel extends JPanel {
         add(new HeaderPanel("Kaynak", "Hedef"), gc);
 
         gc.gridx = 0;
-        gc.gridwidth = xOffset + N + 2;
-        gc.gridy = yOffset + N + 2;
+        gc.gridwidth = xOffset + noOfLinks + 2;
+        gc.gridy = yOffset + noOfLinks + 2;
         gc.weightx = 1;
         gc.weighty = 1;
         gc.fill = GridBagConstraints.BOTH;

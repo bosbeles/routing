@@ -5,12 +5,13 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cell<T> extends JPanel {
+public class Cell<T extends Serializable> extends JPanel {
 
     public static final Color DISABLED_COLOR = new Color(214, 217, 223);
     public static final Color PRIMARY_COLOR = new Color(0, 122, 204);
@@ -28,7 +29,7 @@ public class Cell<T> extends JPanel {
     protected String text;
     protected String deselectedText;
     protected boolean vertical;
-    protected List<ActionListener> listeners;
+    protected transient List<ActionListener> listeners;
     protected boolean selected;
     protected boolean hoverEnabled = true;
 
@@ -115,13 +116,7 @@ public class Cell<T> extends JPanel {
 
     private void createMouseListener() {
 
-        this.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-
-            }
-
+        this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
@@ -131,16 +126,10 @@ public class Cell<T> extends JPanel {
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
             public void mouseEntered(MouseEvent e) {
                 if (hoverEnabled) {
                     highlight();
                 }
-
             }
 
             @Override
@@ -212,29 +201,9 @@ public class Cell<T> extends JPanel {
         }
 
         if (highlighted) {
-            if (isEnabled()) {
-                if (isSelected()) {
-                    setBackground(primaryColor.darker());
-                } else {
-                    setBackground(secondaryColor.darker());
-                }
-            } else {
-                setBackground(secondaryColor.darker());
-                centerLabel.setEnabled(true);
-                upperLabel.setEnabled(true);
-            }
+            highlight();
         } else {
-            if (isEnabled()) {
-                if (isSelected()) {
-                    setBackground(primaryColor);
-                } else {
-                    setBackground(secondaryColor);
-                }
-            } else {
-                setBackground(disabledColor);
-                centerLabel.setEnabled(isEnabled());
-                upperLabel.setEnabled(isEnabled());
-            }
+            dehighlight();
         }
     }
 

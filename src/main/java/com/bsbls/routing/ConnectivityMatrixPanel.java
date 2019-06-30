@@ -39,15 +39,15 @@ public class ConnectivityMatrixPanel extends MatrixPanel {
         ConnectivityMatrixPanel panel = new ConnectivityMatrixPanel();
 
 
-        panel.setModel(MatrixModel.random(1 + (int) (Math.random() * 5)));
+        panel.setModel(MatrixModel.randomModel(1 + (int) (Math.random() * 5)));
 
 
         JPanel combo = new JPanel();
         JLabel label1 = new JLabel("Link ID: ");
-        JComboBox<String> combo1 = new JComboBox<String>(new String[]{"1001", "1002", "1003"});
+        JComboBox<String> combo1 = new JComboBox<>(new String[]{"1001", "1002", "1003"});
         combo1.setPrototypeDisplayValue("65535");
         JLabel label2 = new JLabel("Sender ID: ");
-        JComboBox<String> combo2 = new JComboBox<String>(new String[]{"5", "6", "7"});
+        JComboBox<String> combo2 = new JComboBox<>(new String[]{"5", "6", "7"});
         combo2.setPrototypeDisplayValue("65535");
         combo.add(label1);
         combo.add(combo1);
@@ -56,7 +56,7 @@ public class ConnectivityMatrixPanel extends MatrixPanel {
 
         combo2.addItemListener(e -> {
 
-            panel.setModel(MatrixModel.random(0 + (int) (Math.random() * 15)));
+            panel.setModel(MatrixModel.randomModel(0 + (int) (Math.random() * 15)));
             //SwingUtilities.getWindowAncestor(panel).pack();
 
 

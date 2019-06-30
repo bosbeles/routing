@@ -52,17 +52,17 @@ public class HeaderPanel extends JPanel {
 
     }
 
-    private Point rightTriangle(int W, int H, int w, int h) {
+    private Point rightTriangle(int width, int height, int w, int h) {
         Point p = new Point();
-        p.x = (W + (h * W) / H - w) / 2;
-        p.y = (H - (H * w) / W - h) / 4;
+        p.x = (width + (h * width) / height - w) / 2;
+        p.y = (height - (height * w) / width - h) / 4;
         return p;
     }
 
-    private Point leftTriangle(int W, int H, int w, int h) {
+    private Point leftTriangle(int width, int height, int w, int h) {
         Point p = new Point();
-        p.x = (W - (h * W) / H - w) / 4;
-        p.y = (H + (H * w) / W - h) / 2;
+        p.x = (width - (h * width) / height - w) / 4;
+        p.y = (height + (height * w) / width - h) / 2;
         return p;
     }
 }

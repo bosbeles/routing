@@ -1,9 +1,10 @@
 package com.bsbls.routing.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Random;
 
-public class MatrixModel {
+public class MatrixModel implements Serializable {
 
     private String[] links;
     private boolean[] tx;
@@ -62,9 +63,12 @@ public class MatrixModel {
         this.matrix = matrix;
     }
 
-    public static MatrixModel random(int N) {
-        String[] links = new String[N];
-        for (int i = 0; i < N; i++) {
+
+    public static final Random RANDOM = new Random();
+
+    public static MatrixModel randomModel(int noOfLinks) {
+        String[] links = new String[noOfLinks];
+        for (int i = 0; i < noOfLinks; i++) {
             links[i] = String.valueOf(i + 1000);
         }
 
@@ -72,24 +76,22 @@ public class MatrixModel {
         boolean[] rx = new boolean[links.length];
         boolean[][] matrix = new boolean[links.length][links.length];
 
-        Random rand = new Random();
         for (int i = 0; i < links.length; i++) {
             for (int j = 0; j < links.length; j++) {
                 if (i != j) {
-                    matrix[i][j] = rand.nextBoolean();
+                    matrix[i][j] = RANDOM.nextBoolean();
                 }
             }
         }
 
         for (int i = 0; i < tx.length; i++) {
-            tx[i] = rand.nextBoolean();
+            tx[i] = RANDOM.nextBoolean();
         }
 
         for (int i = 0; i < rx.length; i++) {
-            rx[i] = rand.nextBoolean();
+            rx[i] = RANDOM.nextBoolean();
         }
 
-        MatrixModel model = new MatrixModel(links, tx, rx, matrix);
-        return model;
+        return new MatrixModel(links, tx, rx, matrix);
     }
 }

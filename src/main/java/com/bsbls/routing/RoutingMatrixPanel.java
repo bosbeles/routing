@@ -22,8 +22,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
     private enum TxRx {NO_LABEL, TX_RX_LABEL, TX_RX_BUTTON}
 
     private MatrixModel filterModel;
-    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture<?> future;
+    private transient ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private transient ScheduledFuture<?> future;
     private TxRx txRx = TxRx.TX_RX_BUTTON;
 
 
@@ -59,8 +59,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
         if (model != null) {
             Arrays.fill(model.getTx(), true);
             Arrays.fill(model.getRx(), true);
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < N; j++) {
+            for (int i = 0; i < noOfLinks; i++) {
+                for (int j = 0; j < noOfLinks; j++) {
                     model.getMatrix()[i][j] = i == 0 || j == 0;
                 }
             }
@@ -76,9 +76,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         if (future != null) {
             future.cancel(false);
         }
-        future = scheduler.schedule(() -> {
-            setModel(newModel);
-        }, 500, TimeUnit.MILLISECONDS);
+        future = scheduler.schedule(() -> setModel(newModel), 500, TimeUnit.MILLISECONDS);
 
     }
 
@@ -86,22 +84,22 @@ public class RoutingMatrixPanel extends MatrixPanel {
     public void refresh() {
         super.refresh();
         if (filterModel != null) {
-            for (int i = 0; i < N; i++) {
+            for (int i = 0; i < noOfLinks; i++) {
                 boolean filtered = false;
                 if (i < filterModel.getTx().length) {
                     filtered = filterModel.getTx()[i];
                 }
                 txCells[i].setFiltered(filtered);
             }
-            for (int i = 0; i < N; i++) {
+            for (int i = 0; i < noOfLinks; i++) {
                 boolean filtered = false;
                 if (i < filterModel.getRx().length) {
                     filtered = filterModel.getRx()[i];
                 }
                 rxCells[i].setFiltered(filtered);
             }
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < N; j++) {
+            for (int i = 0; i < noOfLinks; i++) {
+                for (int j = 0; j < noOfLinks; j++) {
                     boolean filtered = false;
                     if (i < filterModel.getMatrix().length && j < filterModel.getMatrix().length) {
                         filtered = filterModel.getMatrix()[i][j];
@@ -112,8 +110,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
             }
         }
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        for (int i = 0; i < noOfLinks; i++) {
+            for (int j = 0; j < noOfLinks; j++) {
                 matrixCells[i][j].setEnabled(rxCells[i].isSelected() && txCells[j].isSelected());
                 if (last != null && last.getTo() == j && last.getFrom() == i) {
                     matrixCells[last.getFrom()][last.getTo()].highlight();
@@ -128,7 +126,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
     @Override
     public void updatePanel() {
         super.updatePanel();
-        for (int i = 1; i < N; i++) {
+        for (int i = 1; i < noOfLinks; i++) {
             Cell<?> cell = txCells[i];
             cell.setHoverEnabled(true);
             final int index = i;
@@ -141,7 +139,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
             });
             cell.setComponentPopupMenu(popupMenu);
         }
-        for (int i = 1; i < N; i++) {
+        for (int i = 1; i < noOfLinks; i++) {
             Cell<?> cell = rxCells[i];
             cell.setHoverEnabled(true);
             final int index = i;
@@ -154,8 +152,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
             });
             cell.setComponentPopupMenu(popupMenu);
         }
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+        for (int i = 0; i < noOfLinks; i++) {
+            for (int j = 0; j < noOfLinks; j++) {
                 Cell<FilterDirection> cell = matrixCells[i][j];
                 cell.addActionListener(e -> {
                     cell.setSelected(!cell.isSelected());
@@ -180,7 +178,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
     }
 
     private void addTxRxLabel() {
-        if (N < 2) return;
+        if (noOfLinks < 2) return;
 
         GridBagConstraints gc = new GridBagConstraints();
         gc.insets = new Insets(2, 2, 2, 2);
@@ -189,7 +187,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.gridx = 0;
         gc.gridy = 3;
         gc.gridwidth = 1;
-        gc.gridheight = N - 1;
+        gc.gridheight = noOfLinks - 1;
         gc.fill = GridBagConstraints.VERTICAL;
 
         Font font = new Font("TimesRoman", Font.BOLD, 16);
@@ -202,7 +200,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         gc.gridx = 3;
         gc.gridy = 0;
-        gc.gridwidth = N - 1;
+        gc.gridwidth = noOfLinks - 1;
         gc.gridheight = 1;
         gc.fill = GridBagConstraints.HORIZONTAL;
 
@@ -214,7 +212,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
     }
 
     private void addTxRxButton() {
-        if (N < 2) return;
+        if (noOfLinks < 2) return;
 
         GridBagConstraints gc = new GridBagConstraints();
         gc.insets = new Insets(2, 2, 2, 2);
@@ -223,10 +221,9 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.gridx = 0;
         gc.gridy = 3;
         gc.gridwidth = 1;
-        gc.gridheight = N - 1;
+        gc.gridheight = noOfLinks - 1;
         gc.fill = GridBagConstraints.VERTICAL;
 
-        Font font = new Font("TimesRoman", Font.BOLD, 16);
         rxCell = new Cell<>(null, "Rx", "Rx", true, 5);
         rxCell.setPreferredSize(new Dimension(30, 10));
         rxCell.addActionListener(e -> {
@@ -242,7 +239,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         gc.gridx = 3;
         gc.gridy = 0;
-        gc.gridwidth = N - 1;
+        gc.gridwidth = noOfLinks - 1;
         gc.gridheight = 1;
         gc.fill = GridBagConstraints.HORIZONTAL;
 
@@ -295,10 +292,10 @@ public class RoutingMatrixPanel extends MatrixPanel {
     private static JComponent test() {
         RoutingMatrixPanel panel = new RoutingMatrixPanel();
 
-        int N = 1 + (int) (Math.random() * 10);
+        int noOfLinks = 1 + (int) (Math.random() * 10);
 
-        MatrixModel model = MatrixModel.random(N);
-        MatrixModel filterModel = MatrixModel.random(N);
+        MatrixModel model = MatrixModel.randomModel(noOfLinks);
+        MatrixModel filterModel = MatrixModel.randomModel(noOfLinks);
 
         fixModel(model);
         fixFilterModel(filterModel);
@@ -312,7 +309,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         JButton modelUpdate = new JButton("Update Model");
         modelUpdate.addActionListener(e -> {
             int newN = 1 + (int) (Math.random() * 10);
-            MatrixModel newModel = MatrixModel.random(newN);
+            MatrixModel newModel = MatrixModel.randomModel(newN);
             fixModel(newModel);
             panel.setRoutingModel(newModel);
 
@@ -321,15 +318,13 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         JButton filterUpdate = new JButton("Update Filters");
         filterUpdate.addActionListener(e -> {
-            MatrixModel newFilterModel = MatrixModel.random(N);
+            MatrixModel newFilterModel = MatrixModel.randomModel(noOfLinks);
             fixFilterModel(newFilterModel);
             panel.setFilterModel(newFilterModel);
         });
 
         JButton resetModel = new JButton("Reset");
-        resetModel.addActionListener(e -> {
-            panel.reset();
-        });
+        resetModel.addActionListener(e -> panel.reset());
 
 
         JPanel control = new JPanel();

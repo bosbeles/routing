@@ -1,6 +1,8 @@
 package com.bsbls.routing.model;
 
-public class FilterDirection {
+import java.io.Serializable;
+
+public class FilterDirection implements Serializable {
 
     public enum FilterDirectionType {TX, RX, ROUTING}
 
