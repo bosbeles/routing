@@ -14,12 +14,15 @@ import java.util.concurrent.TimeUnit;
 public class RoutingMatrixPanel extends MatrixPanel {
 
 
+    private Cell<?> rxCell;
+    private Cell<?> txCell;
+
     private enum TxRx {NO_LABEL, TX_RX_LABEL, TX_RX_BUTTON}
 
     private MatrixModel filterModel;
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> future;
-    private TxRx txRx = TxRx.TX_RX_LABEL;
+    private TxRx txRx = TxRx.TX_RX_BUTTON;
 
 
 
@@ -182,7 +185,51 @@ public class RoutingMatrixPanel extends MatrixPanel {
     }
 
     private void addTxRxButton() {
+        if (N < 2) return;
 
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(2, 2, 2, 2);
+        gc.anchor = GridBagConstraints.CENTER;
+
+        gc.gridx = 0;
+        gc.gridy = 3;
+        gc.gridwidth = 1;
+        gc.gridheight = N - 1;
+        gc.fill = GridBagConstraints.VERTICAL;
+
+        Font font = new Font("TimesRoman", Font.BOLD, 16);
+        rxCell = new Cell<>(null, "Rx", true);
+        rxCell.addActionListener(e->{
+            rxCell.setSelected(!rxCell.isSelected());
+        });
+        updateCells(rxCells, rxCell);
+
+        add(rxCell, gc);
+
+        gc.gridx = 3;
+        gc.gridy = 0;
+        gc.gridwidth = N - 1;
+        gc.gridheight = 1;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+
+        txCell = new Cell<>(null, "Tx", false);
+        txCell.addActionListener(e->{
+            txCell.setSelected(!txCell.isSelected());
+        });
+        updateCells(txCells, txCell);
+
+        add(txCell, gc);
+    }
+
+    private void updateCells(Cell<?>[] cells, Cell<?> cell) {
+        boolean allSelected = true;
+        for (int i = 1; i < cells.length; i++) {
+            if(!cells[i].isSelected()) {
+                allSelected = false;
+                break;
+            }
+        }
+        cell.setSelected(allSelected);
     }
 
     public MatrixModel getRoutingModel() {
