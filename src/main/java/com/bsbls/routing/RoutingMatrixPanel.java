@@ -25,8 +25,6 @@ public class RoutingMatrixPanel extends MatrixPanel {
     private TxRx txRx = TxRx.TX_RX_BUTTON;
 
 
-
-
     public void reset() {
         if (model != null) {
             Arrays.fill(model.getTx(), true);
@@ -87,13 +85,10 @@ public class RoutingMatrixPanel extends MatrixPanel {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 matrixCells[i][j].setEnabled(rxCells[i].isSelected() && txCells[j].isSelected());
-                if(last != null && last.x == j && last.y == i) {
-                    EventQueue.invokeLater(()->{
-                        matrixCells[last.y][last.x].highlight();
-                        txCells[last.x].highlight();
-                        rxCells[last.y].highlight();
-                    });
-
+                if (last != null && last.x == j && last.y == i) {
+                    matrixCells[last.y][last.x].highlight();
+                    txCells[last.x].highlight();
+                    rxCells[last.y].highlight();
                 }
             }
         }
@@ -202,7 +197,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         Font font = new Font("TimesRoman", Font.BOLD, 16);
         rxCell = new Cell<>(null, "Rx", true);
-        rxCell.addActionListener(e->{
+        rxCell.addActionListener(e -> {
             rxCell.setSelected(!rxCell.isSelected());
             Arrays.fill(model.getRx(), rxCell.isSelected());
             model.getRx()[0] = true;
@@ -220,7 +215,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.fill = GridBagConstraints.HORIZONTAL;
 
         txCell = new Cell<>(null, "Tx", false);
-        txCell.addActionListener(e->{
+        txCell.addActionListener(e -> {
             txCell.setSelected(!txCell.isSelected());
             Arrays.fill(model.getTx(), txCell.isSelected());
             model.getTx()[0] = true;
@@ -235,7 +230,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
     private void updateCells(Cell<?>[] cells, Cell<?> cell) {
         boolean allSelected = true;
         for (int i = 1; i < cells.length; i++) {
-            if(!cells[i].isSelected()) {
+            if (!cells[i].isSelected()) {
                 allSelected = false;
                 break;
             }

@@ -34,6 +34,7 @@ public class Cell<T> extends JPanel {
     protected boolean filtered;
 
 
+    protected boolean highlighted;
     protected Color primaryColor;
     protected Color secondaryColor;
     protected Color disabledColor;
@@ -146,6 +147,7 @@ public class Cell<T> extends JPanel {
     }
 
     public void dehighlight() {
+        highlighted = false;
         if (isEnabled()) {
             if (isSelected()) {
                 setBackground(primaryColor);
@@ -161,6 +163,7 @@ public class Cell<T> extends JPanel {
     }
 
     public void highlight() {
+        highlighted = true;
         if (isEnabled()) {
             if (isSelected()) {
                 setBackground(primaryColor.darker());
@@ -201,6 +204,33 @@ public class Cell<T> extends JPanel {
 
             setBackground(disabledColor);
             centerLabel.setForeground(Color.BLACK);
+        }
+
+        if(highlighted) {
+            if (isEnabled()) {
+                if (isSelected()) {
+                    setBackground(primaryColor.darker());
+                } else {
+                    setBackground(secondaryColor.darker());
+                }
+            } else {
+                setBackground(secondaryColor.darker());
+                centerLabel.setEnabled(true);
+                upperLabel.setEnabled(true);
+            }
+        } else {
+            if (isEnabled()) {
+                if (isSelected()) {
+                    setBackground(primaryColor);
+                } else {
+                    setBackground(secondaryColor);
+                }
+            }
+            else {
+                setBackground(disabledColor);
+                centerLabel.setEnabled(isEnabled());
+                upperLabel.setEnabled(isEnabled());
+            }
         }
     }
 
