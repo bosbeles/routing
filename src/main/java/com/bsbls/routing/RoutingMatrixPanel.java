@@ -26,6 +26,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
 
 
+
     public void reset() {
         if (model != null) {
             Arrays.fill(model.getTx(), true);
@@ -109,6 +110,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
             cell.addActionListener(e -> {
                 cell.setSelected(!cell.isSelected());
                 getModel().getTx()[index] = cell.isSelected();
+                updateCells(txCells, txCell);
                 refresh();
                 modelChanged();
             });
@@ -120,6 +122,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
             cell.addActionListener(e -> {
                 cell.setSelected(!cell.isSelected());
                 getModel().getRx()[index] = cell.isSelected();
+                updateCells(rxCells, rxCell);
                 refresh();
                 modelChanged();
             });
@@ -201,6 +204,10 @@ public class RoutingMatrixPanel extends MatrixPanel {
         rxCell = new Cell<>(null, "Rx", true);
         rxCell.addActionListener(e->{
             rxCell.setSelected(!rxCell.isSelected());
+            Arrays.fill(model.getRx(), rxCell.isSelected());
+            model.getRx()[0] = true;
+            refresh();
+            modelChanged();
         });
         updateCells(rxCells, rxCell);
 
@@ -215,6 +222,10 @@ public class RoutingMatrixPanel extends MatrixPanel {
         txCell = new Cell<>(null, "Tx", false);
         txCell.addActionListener(e->{
             txCell.setSelected(!txCell.isSelected());
+            Arrays.fill(model.getTx(), txCell.isSelected());
+            model.getTx()[0] = true;
+            refresh();
+            modelChanged();
         });
         updateCells(txCells, txCell);
 
