@@ -18,6 +18,7 @@ public class Cell<T> extends JPanel {
 
     private static ImageIcon whiteFilterIcon;
     private static ImageIcon blackFilterIcon;
+    private final int padding;
 
 
     protected T data;
@@ -54,7 +55,12 @@ public class Cell<T> extends JPanel {
     }
 
     public Cell(T data, String selectedText, String deselectedText, boolean vertical) {
+        this(data, selectedText, deselectedText, vertical, 10);
+    }
+
+    public Cell(T data, String selectedText, String deselectedText, boolean vertical, int padding) {
         super();
+        this.padding = padding;
         this.data = data;
         this.vertical = vertical;
         this.text = selectedText == null ? "" : selectedText;
@@ -89,7 +95,7 @@ public class Cell<T> extends JPanel {
         setLayout(new BorderLayout());
 
 
-        JPanel panel = emptyPanel(getWidth(), 10);
+        JPanel panel = emptyPanel(getWidth(), padding);
         panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 2, 2));
         panel.add(upperLabel);
         this.add(panel, BorderLayout.NORTH);
@@ -102,7 +108,7 @@ public class Cell<T> extends JPanel {
 
         this.add(p2, BorderLayout.CENTER);
 
-        JPanel empty = emptyPanel(getWidth(), 10);
+        JPanel empty = emptyPanel(getWidth(), padding);
         this.add(empty, BorderLayout.SOUTH);
     }
 

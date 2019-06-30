@@ -196,7 +196,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.fill = GridBagConstraints.VERTICAL;
 
         Font font = new Font("TimesRoman", Font.BOLD, 16);
-        rxCell = new Cell<>(null, "Rx", true);
+        rxCell = new Cell<>(null, "Rx","Rx", true, 5);
+        rxCell.setPreferredSize(new Dimension(30, 10));
         rxCell.addActionListener(e -> {
             rxCell.setSelected(!rxCell.isSelected());
             Arrays.fill(model.getRx(), rxCell.isSelected());
@@ -214,7 +215,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.gridheight = 1;
         gc.fill = GridBagConstraints.HORIZONTAL;
 
-        txCell = new Cell<>(null, "Tx", false);
+        txCell = new Cell<>(null, "Tx", "Tx",  false, 5);
+        txCell.setPreferredSize(new Dimension(10, 30));
         txCell.addActionListener(e -> {
             txCell.setSelected(!txCell.isSelected());
             Arrays.fill(model.getTx(), txCell.isSelected());
@@ -325,7 +327,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
     }
 
     private static void fixModel(MatrixModel model) {
-        model.getLinks()[0] = "HOST";
+        model.getLinks()[0] = "Ana Sistem";
         model.getTx()[0] = true;
         model.getRx()[0] = true;
     }

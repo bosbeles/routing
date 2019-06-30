@@ -141,7 +141,7 @@ public class MatrixPanel extends JPanel {
         gc.gridx = 1;
         gc.gridy = 1;
         gc.fill = GridBagConstraints.BOTH;
-        add(new HeaderPanel("From", "To"), gc);
+        add(new HeaderPanel("Kaynak", "Hedef"), gc);
 
         gc.gridx = 0;
         gc.gridwidth = xOffset + N + 2;
