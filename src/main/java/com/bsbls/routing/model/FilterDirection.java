@@ -2,7 +2,7 @@ package com.bsbls.routing.model;
 
 public class FilterDirection {
 
-    public enum FilterDirectionType { TX, RX, ROUTING}
+    public enum FilterDirectionType {TX, RX, ROUTING}
 
     private FilterDirectionType filterDirectionType;
     private int from;

@@ -31,10 +31,9 @@ public class RoutingMatrixPanel extends MatrixPanel {
         super();
         popupMenu = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Go to Filters...");
-        menuItem.addActionListener(e-> {
-
+        menuItem.addActionListener(e -> {
             Component comp = popupMenu.getInvoker();
-            if(comp instanceof Cell) {
+            if (comp instanceof Cell) {
                 goToFilterWindow(((Cell<FilterDirection>) comp).getData());
             }
 
@@ -45,15 +44,15 @@ public class RoutingMatrixPanel extends MatrixPanel {
     public void goToFilterWindow(FilterDirection fd) {
         String[] links = getModel().getLinks();
         int from = -1;
-        if(fd.getFrom() > 0 && fd.getFrom() < links.length) {
+        if (fd.getFrom() > 0 && fd.getFrom() < links.length) {
             from = Integer.parseInt(links[fd.getFrom()]);
         }
         int to = -1;
-        if(fd.getTo() > 0 && fd.getTo() < links.length) {
+        if (fd.getTo() > 0 && fd.getTo() < links.length) {
             to = Integer.parseInt(links[fd.getTo()]);
         }
 
-        System.out.println("Filter: " + fd.getFilterDirectionType() + " (" +  from + ", " + to + ")" );
+        System.out.println("Filter: " + fd.getFilterDirectionType() + " (" + from + ", " + to + ")");
     }
 
     public void reset() {
