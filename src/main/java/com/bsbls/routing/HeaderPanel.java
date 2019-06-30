@@ -2,7 +2,6 @@ package com.bsbls.routing;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Locale;
 
 public class HeaderPanel extends JPanel {
 
@@ -10,12 +9,11 @@ public class HeaderPanel extends JPanel {
     private final String left;
     private final String right;
 
-    public HeaderPanel(String left, String right)
-    {
+    public HeaderPanel(String left, String right) {
         super();
         this.left = left;
         this.right = right;
-        setPreferredSize(new Dimension(120,120));
+        setPreferredSize(new Dimension(120, 120));
     }
 
     @Override
@@ -24,7 +22,7 @@ public class HeaderPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setFont(new Font("TimesRoman",  Font.PLAIN, 20));
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 
         // get metrics from the graphics
         FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
@@ -41,7 +39,6 @@ public class HeaderPanel extends JPanel {
         // text with some padding.
 
 
-
         Point point = leftTriangle(getWidth(), getHeight(), fromWidth, hgt);
         g2d.drawString(this.left, point.x, point.y + hgt - 4);
 
@@ -51,23 +48,21 @@ public class HeaderPanel extends JPanel {
 
 
         g2d.setStroke(new BasicStroke(2f));
-        g2d.drawLine(0,0, this.getWidth(), this.getHeight());
+        g2d.drawLine(0, 0, this.getWidth(), this.getHeight());
 
     }
 
-    private Point rightTriangle(int W, int H, int w, int h)
-    {
+    private Point rightTriangle(int W, int H, int w, int h) {
         Point p = new Point();
-        p.x = (W + (h*W)/H - w) / 2;
-        p.y = (H - (H*w)/W - h) / 4;
+        p.x = (W + (h * W) / H - w) / 2;
+        p.y = (H - (H * w) / W - h) / 4;
         return p;
     }
 
-    private Point leftTriangle(int W, int H, int w, int h)
-    {
+    private Point leftTriangle(int W, int H, int w, int h) {
         Point p = new Point();
-        p.x = (W - (h*W)/H - w) / 4;
-        p.y = (H + (H*w)/W - h) / 2;
+        p.x = (W - (h * W) / H - w) / 4;
+        p.y = (H + (H * w) / W - h) / 2;
         return p;
     }
 }

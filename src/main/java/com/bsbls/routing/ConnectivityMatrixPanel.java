@@ -6,7 +6,6 @@ import com.bsbls.test.GUITester;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Random;
 
 public class ConnectivityMatrixPanel extends MatrixPanel {
 
@@ -40,7 +39,7 @@ public class ConnectivityMatrixPanel extends MatrixPanel {
         ConnectivityMatrixPanel panel = new ConnectivityMatrixPanel();
 
 
-        panel.setModel(MatrixModel.random(1 + (int)(Math.random() * 5)));
+        panel.setModel(MatrixModel.random(1 + (int) (Math.random() * 5)));
 
 
         JPanel combo = new JPanel();
@@ -55,9 +54,9 @@ public class ConnectivityMatrixPanel extends MatrixPanel {
         combo.add(label2);
         combo.add(combo2);
 
-        combo2.addItemListener(e->{
+        combo2.addItemListener(e -> {
 
-            panel.setModel(MatrixModel.random(0 + (int)(Math.random() * 15)));
+            panel.setModel(MatrixModel.random(0 + (int) (Math.random() * 15)));
             //SwingUtilities.getWindowAncestor(panel).pack();
 
 

@@ -7,7 +7,7 @@ public class GUITester {
 
 
     public static void test(JPanel panel) {
-        test(()-> panel, null);
+        test(() -> panel, null);
     }
 
     public static void test(Supplier<JComponent> panelSupplier) {
@@ -58,13 +58,12 @@ public class GUITester {
         try {
             UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
             for (UIManager.LookAndFeelInfo lookAndFeelInfo : lookAndFeelInfos) {
-                if(lookAndFeelInfo.getName().contains(lookAndFeel)) {
+                if (lookAndFeelInfo.getName().contains(lookAndFeel)) {
                     UIManager.setLookAndFeel(lookAndFeelInfo.getClassName().toString());
                 }
 
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
 
         }
     }

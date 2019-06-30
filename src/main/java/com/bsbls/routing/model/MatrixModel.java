@@ -65,7 +65,7 @@ public class MatrixModel {
     public static MatrixModel random(int N) {
         String[] links = new String[N];
         for (int i = 0; i < N; i++) {
-            links[i] = String.valueOf (i + 1000);
+            links[i] = String.valueOf(i + 1000);
         }
 
         boolean[] tx = new boolean[links.length];

@@ -3,7 +3,10 @@ package com.bsbls.routing;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +74,6 @@ public class Cell<T> extends JPanel {
     }
 
 
-
     private void createPanel() {
         upperLabel = new JLabel();
 
@@ -84,10 +86,9 @@ public class Cell<T> extends JPanel {
 
         VerticalLabel verticalLabel = new VerticalLabel(text);
         this.centerLabel = verticalLabel;
-        if(vertical) {
+        if (vertical) {
             centerLabel.setRotation(VerticalLabel.ROTATE_LEFT);
-        }
-        else {
+        } else {
             centerLabel.setRotation(VerticalLabel.DONT_ROTATE);
         }
         this.centerLabel.setFont(new Font("TimesRoman", Font.PLAIN, 16));
@@ -103,7 +104,7 @@ public class Cell<T> extends JPanel {
         JPanel p2 = new JPanel(new GridBagLayout());
         p2.setOpaque(false);
         GridBagConstraints gc = new GridBagConstraints();
-        gc.insets = new Insets(0,5,0,5);
+        gc.insets = new Insets(0, 5, 0, 5);
         p2.add(this.centerLabel, gc);
 
         this.add(p2, BorderLayout.CENTER);
@@ -135,9 +136,8 @@ public class Cell<T> extends JPanel {
             }
 
             @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                if(hoverEnabled) {
+            public void mouseEntered(MouseEvent e) {
+                if (hoverEnabled) {
                     highlight();
                 }
 
@@ -160,8 +160,7 @@ public class Cell<T> extends JPanel {
             } else {
                 setBackground(secondaryColor);
             }
-        }
-        else {
+        } else {
             setBackground(disabledColor);
             centerLabel.setEnabled(isEnabled());
             upperLabel.setEnabled(isEnabled());
@@ -212,7 +211,7 @@ public class Cell<T> extends JPanel {
             centerLabel.setForeground(Color.BLACK);
         }
 
-        if(highlighted) {
+        if (highlighted) {
             if (isEnabled()) {
                 if (isSelected()) {
                     setBackground(primaryColor.darker());
@@ -231,8 +230,7 @@ public class Cell<T> extends JPanel {
                 } else {
                     setBackground(secondaryColor);
                 }
-            }
-            else {
+            } else {
                 setBackground(disabledColor);
                 centerLabel.setEnabled(isEnabled());
                 upperLabel.setEnabled(isEnabled());
@@ -241,29 +239,27 @@ public class Cell<T> extends JPanel {
     }
 
 
-
     public void addActionListener(ActionListener listener) {
-        if(listeners == null) {
+        if (listeners == null) {
             listeners = new ArrayList<>(2);
         }
         listeners.add(listener);
     }
 
     public boolean removeActionListener(ActionListener listener) {
-        if(listeners != null) {
+        if (listeners != null) {
             return listeners.remove(listener);
         }
         return false;
     }
 
     private void notifyListeners(ActionEvent ae) {
-        if(listeners != null) {
+        if (listeners != null) {
             for (ActionListener listener : listeners) {
                 listener.actionPerformed(ae);
             }
         }
     }
-
 
 
     public T getData() {

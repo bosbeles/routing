@@ -1,5 +1,6 @@
 package com.bsbls.routing;
 
+import com.bsbls.routing.model.FilterDirection;
 import com.bsbls.routing.model.MatrixModel;
 
 import javax.swing.*;
@@ -12,11 +13,11 @@ public class MatrixPanel extends JPanel {
 
     protected MatrixModel model;
 
-    protected Cell<?>[] txCells;
-    protected Cell<?>[] rxCells;
-    protected Cell<Point>[][] matrixCells;
+    protected Cell<FilterDirection>[] txCells;
+    protected Cell<FilterDirection>[] rxCells;
+    protected Cell<FilterDirection>[][] matrixCells;
     protected int N;
-    protected Point last;
+    protected FilterDirection last;
 
 
     public void refresh() {
@@ -32,7 +33,7 @@ public class MatrixPanel extends JPanel {
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                Cell<Point> cell = matrixCells[i][j];
+                Cell<FilterDirection> cell = matrixCells[i][j];
                 cell.setSelected(getModel().getMatrix()[i][j]);
             }
         }
@@ -42,8 +43,8 @@ public class MatrixPanel extends JPanel {
 
     public void updatePanel() {
         this.N = model == null ? 0 : model.getMatrix().length;
-        txCells = new Cell<?>[N];
-        rxCells = new Cell<?>[N];
+        txCells = new Cell[N];
+        rxCells = new Cell[N];
         matrixCells = new Cell[N][N];
 
         removeAll();
@@ -58,7 +59,7 @@ public class MatrixPanel extends JPanel {
         gc.fill = GridBagConstraints.BOTH;
         Dimension txDimension = new Dimension(40, 120);
         for (int i = 0; i < N; i++) {
-            Cell<?> tx = new Cell<>(null, getModel().getLinks()[i], true);
+            Cell<FilterDirection> tx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.TX, -1, i), getModel().getLinks()[i], true);
             tx.setHoverEnabled(false);
             txCells[i] = tx;
 
@@ -72,7 +73,7 @@ public class MatrixPanel extends JPanel {
         Dimension rxDimension = new Dimension(120, 40);
 
         for (int i = 0; i < N; i++) {
-            Cell<?> rx = new Cell<>(null, getModel().getLinks()[i], false);
+            Cell<FilterDirection> rx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.RX, i, -1), getModel().getLinks()[i], false);
             rx.setHoverEnabled(false);
             rxCells[i] = rx;
 
@@ -89,7 +90,7 @@ public class MatrixPanel extends JPanel {
         gc.fill = GridBagConstraints.NONE;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                Cell<Point> cell = new Cell<>(new Point(j,i), Cell.TICK, "", false);
+                Cell<FilterDirection> cell = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.ROUTING, i, j), Cell.TICK, "", false);
                 cell.setPreferredSize(d);
                 cell.setMinimumSize(d);
                 matrixCells[i][j] = cell;
@@ -97,17 +98,17 @@ public class MatrixPanel extends JPanel {
                 cell.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        Point p = cell.getData();
-                        rxCells[p.y].highlight();
-                        txCells[p.x].highlight();
-                        last = p;
+                        FilterDirection fd = cell.getData();
+                        rxCells[fd.getFrom()].highlight();
+                        txCells[fd.getTo()].highlight();
+                        last = fd;
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        Point p = cell.getData();
-                        rxCells[p.y].dehighlight();
-                        txCells[p.x].dehighlight();
+                        FilterDirection fd = cell.getData();
+                        rxCells[fd.getFrom()].dehighlight();
+                        txCells[fd.getTo()].dehighlight();
 
                         last = null;
                     }

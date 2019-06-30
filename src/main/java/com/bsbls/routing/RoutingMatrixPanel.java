@@ -1,5 +1,6 @@
 package com.bsbls.routing;
 
+import com.bsbls.routing.model.FilterDirection;
 import com.bsbls.routing.model.MatrixModel;
 import com.bsbls.test.GUITester;
 
@@ -16,6 +17,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
     private Cell<?> rxCell;
     private Cell<?> txCell;
+    private final JPopupMenu popupMenu;
 
     private enum TxRx {NO_LABEL, TX_RX_LABEL, TX_RX_BUTTON}
 
@@ -24,6 +26,35 @@ public class RoutingMatrixPanel extends MatrixPanel {
     private ScheduledFuture<?> future;
     private TxRx txRx = TxRx.TX_RX_BUTTON;
 
+
+    public RoutingMatrixPanel() {
+        super();
+        popupMenu = new JPopupMenu();
+        JMenuItem menuItem = new JMenuItem("Go to Filters...");
+        menuItem.addActionListener(e-> {
+
+            Component comp = popupMenu.getInvoker();
+            if(comp instanceof Cell) {
+                goToFilterWindow(((Cell<FilterDirection>) comp).getData());
+            }
+
+        });
+        popupMenu.add(menuItem);
+    }
+
+    public void goToFilterWindow(FilterDirection fd) {
+        String[] links = getModel().getLinks();
+        int from = -1;
+        if(fd.getFrom() > 0 && fd.getFrom() < links.length) {
+            from = Integer.parseInt(links[fd.getFrom()]);
+        }
+        int to = -1;
+        if(fd.getTo() > 0 && fd.getTo() < links.length) {
+            to = Integer.parseInt(links[fd.getTo()]);
+        }
+
+        System.out.println("Filter: " + fd.getFilterDirectionType() + " (" +  from + ", " + to + ")" );
+    }
 
     public void reset() {
         if (model != null) {
@@ -85,10 +116,10 @@ public class RoutingMatrixPanel extends MatrixPanel {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 matrixCells[i][j].setEnabled(rxCells[i].isSelected() && txCells[j].isSelected());
-                if (last != null && last.x == j && last.y == i) {
-                    matrixCells[last.y][last.x].highlight();
-                    txCells[last.x].highlight();
-                    rxCells[last.y].highlight();
+                if (last != null && last.getTo() == j && last.getFrom() == i) {
+                    matrixCells[last.getFrom()][last.getTo()].highlight();
+                    txCells[last.getTo()].highlight();
+                    rxCells[last.getFrom()].highlight();
                 }
             }
         }
@@ -109,6 +140,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
                 refresh();
                 modelChanged();
             });
+            cell.setComponentPopupMenu(popupMenu);
         }
         for (int i = 1; i < N; i++) {
             Cell<?> cell = rxCells[i];
@@ -121,17 +153,17 @@ public class RoutingMatrixPanel extends MatrixPanel {
                 refresh();
                 modelChanged();
             });
+            cell.setComponentPopupMenu(popupMenu);
         }
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                Cell<?> cell = matrixCells[i][j];
-                final int y = i;
-                final int x = j;
+                Cell<FilterDirection> cell = matrixCells[i][j];
                 cell.addActionListener(e -> {
                     cell.setSelected(!cell.isSelected());
-                    getModel().getMatrix()[y][x] = cell.isSelected();
+                    getModel().getMatrix()[cell.getData().getFrom()][cell.getData().getTo()] = cell.isSelected();
                     modelChanged();
                 });
+                cell.setComponentPopupMenu(popupMenu);
             }
         }
 
@@ -196,7 +228,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.fill = GridBagConstraints.VERTICAL;
 
         Font font = new Font("TimesRoman", Font.BOLD, 16);
-        rxCell = new Cell<>(null, "Rx","Rx", true, 5);
+        rxCell = new Cell<>(null, "Rx", "Rx", true, 5);
         rxCell.setPreferredSize(new Dimension(30, 10));
         rxCell.addActionListener(e -> {
             rxCell.setSelected(!rxCell.isSelected());
@@ -215,7 +247,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.gridheight = 1;
         gc.fill = GridBagConstraints.HORIZONTAL;
 
-        txCell = new Cell<>(null, "Tx", "Tx",  false, 5);
+        txCell = new Cell<>(null, "Tx", "Tx", false, 5);
         txCell.setPreferredSize(new Dimension(10, 30));
         txCell.addActionListener(e -> {
             txCell.setSelected(!txCell.isSelected());

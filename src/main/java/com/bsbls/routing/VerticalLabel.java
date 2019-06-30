@@ -81,8 +81,7 @@ public class VerticalLabel extends JLabel {
                 insets.left = insets.top;
                 insets.top = insets.right;
                 insets.right = temp;
-            }
-            else if (rotation == ROTATE_RIGHT) {
+            } else if (rotation == ROTATE_RIGHT) {
                 int temp = insets.bottom;
                 insets.bottom = insets.right;
                 insets.right = insets.top;
@@ -102,8 +101,7 @@ public class VerticalLabel extends JLabel {
                 insets.left = insets.top;
                 insets.top = insets.right;
                 insets.right = temp;
-            }
-            else if (rotation == ROTATE_RIGHT) {
+            } else if (rotation == ROTATE_RIGHT) {
                 int temp = insets.bottom;
                 insets.bottom = insets.right;
                 insets.right = insets.top;
@@ -162,8 +160,7 @@ public class VerticalLabel extends JLabel {
     public static void main(String[] args) {
         try {
             //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         final JFrame frame = new JFrame();
