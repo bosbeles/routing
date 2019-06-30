@@ -13,9 +13,14 @@ import java.util.concurrent.TimeUnit;
 
 public class RoutingMatrixPanel extends MatrixPanel {
 
+
+    private enum TxRx {NO_LABEL, TX_RX_LABEL, TX_RX_BUTTON}
+
     private MatrixModel filterModel;
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> future;
+    private TxRx txRx = TxRx.TX_RX_LABEL;
+
 
 
     public void reset() {
@@ -36,7 +41,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
     private void modelChanged() {
         MatrixModel newModel = new MatrixModel(getModel());
-        if(future != null) {
+        if (future != null) {
             future.cancel(false);
         }
         future = scheduler.schedule(() -> {
@@ -78,6 +83,14 @@ public class RoutingMatrixPanel extends MatrixPanel {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 matrixCells[i][j].setEnabled(rxCells[i].isSelected() && txCells[j].isSelected());
+                if(last != null && last.x == j && last.y == i) {
+                    EventQueue.invokeLater(()->{
+                        matrixCells[last.y][last.x].highlight();
+                        txCells[last.x].highlight();
+                        rxCells[last.y].highlight();
+                    });
+
+                }
             }
         }
 
@@ -121,6 +134,54 @@ public class RoutingMatrixPanel extends MatrixPanel {
             }
         }
 
+        switch (txRx) {
+            case TX_RX_LABEL:
+                addTxRxLabel();
+                break;
+            case TX_RX_BUTTON:
+                addTxRxButton();
+                break;
+            default:
+        }
+
+
+    }
+
+    private void addTxRxLabel() {
+        if (N < 2) return;
+
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(2, 2, 2, 2);
+        gc.anchor = GridBagConstraints.CENTER;
+
+        gc.gridx = 0;
+        gc.gridy = 3;
+        gc.gridwidth = 1;
+        gc.gridheight = N - 1;
+        gc.fill = GridBagConstraints.VERTICAL;
+
+        Font font = new Font("TimesRoman", Font.BOLD, 16);
+        VerticalLabel rxLabel = new VerticalLabel("Rx", VerticalLabel.CENTER);
+        rxLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        rxLabel.setFont(font);
+        rxLabel.setRotation(VerticalLabel.ROTATE_LEFT);
+
+        add(rxLabel, gc);
+
+        gc.gridx = 3;
+        gc.gridy = 0;
+        gc.gridwidth = N - 1;
+        gc.gridheight = 1;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel txLabel = new JLabel("Tx", JLabel.CENTER);
+        txLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        txLabel.setFont(font);
+        add(txLabel, gc);
+
+    }
+
+    private void addTxRxButton() {
 
     }
 

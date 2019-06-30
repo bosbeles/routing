@@ -3,10 +3,7 @@ package com.bsbls.routing;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,6 +106,7 @@ public class Cell<T> extends JPanel {
     }
 
     private void createMouseListener() {
+
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -121,8 +119,6 @@ public class Cell<T> extends JPanel {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     ActionEvent ae = new ActionEvent(Cell.this, e.getID(), "", e.getWhen(), e.getModifiers());
                     notifyListeners(ae);
-
-
                 }
             }
 

@@ -4,7 +4,6 @@ import com.bsbls.routing.model.MatrixModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -15,8 +14,9 @@ public class MatrixPanel extends JPanel {
 
     protected Cell<?>[] txCells;
     protected Cell<?>[] rxCells;
-    protected Cell<?>[][] matrixCells;
+    protected Cell<Point>[][] matrixCells;
     protected int N;
+    protected Point last;
 
 
     public void refresh() {
@@ -32,7 +32,7 @@ public class MatrixPanel extends JPanel {
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                Cell<?> cell = matrixCells[i][j];
+                Cell<Point> cell = matrixCells[i][j];
                 cell.setSelected(getModel().getMatrix()[i][j]);
             }
         }
@@ -40,12 +40,11 @@ public class MatrixPanel extends JPanel {
     }
 
 
-
     public void updatePanel() {
         this.N = model == null ? 0 : model.getMatrix().length;
         txCells = new Cell<?>[N];
         rxCells = new Cell<?>[N];
-        matrixCells = new Cell<?>[N][N];
+        matrixCells = new Cell[N][N];
 
         removeAll();
         setLayout(new GridBagLayout());
@@ -90,9 +89,7 @@ public class MatrixPanel extends JPanel {
         gc.fill = GridBagConstraints.NONE;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                final int x = j;
-                final int y = i;
-                Cell<?> cell = new Cell<>(null, Cell.TICK, "", false);
+                Cell<Point> cell = new Cell<>(new Point(j,i), Cell.TICK, "", false);
                 cell.setPreferredSize(d);
                 cell.setMinimumSize(d);
                 matrixCells[i][j] = cell;
@@ -100,25 +97,32 @@ public class MatrixPanel extends JPanel {
                 cell.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        rxCells[y].highlight();
-                        txCells[x].highlight();
+                        Point p = cell.getData();
+                        rxCells[p.y].highlight();
+                        txCells[p.x].highlight();
+                        last = p;
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        rxCells[y].dehighlight();
-                        txCells[x].dehighlight();
+                        Point p = cell.getData();
+                        rxCells[p.y].dehighlight();
+                        txCells[p.x].dehighlight();
+
+                        last = null;
                     }
 
                     @Override
                     public void mousePressed(MouseEvent e) {
 
                         if (e.getButton() == MouseEvent.BUTTON1) {
-                            if(cell.isHoverEnabled()) {
+                            if (cell.isHoverEnabled()) {
                                 cell.highlight();
+                                last = cell.getData();
                             }
                         }
                         super.mousePressed(e);
+
 
                     }
                 });
@@ -158,7 +162,7 @@ public class MatrixPanel extends JPanel {
     }
 
     public void setModel(MatrixModel model) {
-        EventQueue.invokeLater(()->{
+        EventQueue.invokeLater(() -> {
             this.model = model;
             updatePanel();
         });
