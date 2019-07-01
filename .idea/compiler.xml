@@ -9,8 +9,5 @@
         <module name="routing" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="routing" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

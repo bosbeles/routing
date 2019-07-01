@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class RoutingMatrixPanel extends MatrixPanel {
 
 
+    private final Insets insets = new Insets(2, 2, 2, 2);
     private Cell<?> rxCell;
     private Cell<?> txCell;
     private final JPopupMenu popupMenu;
@@ -39,6 +40,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         });
         popupMenu.add(menuItem);
+
     }
 
     public void goToFilterWindow(FilterDirection fd) {
@@ -76,7 +78,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         if (future != null) {
             future.cancel(false);
         }
-        future = scheduler.schedule(() -> setModel(newModel), 500, TimeUnit.MILLISECONDS);
+        future = scheduler.schedule(() -> setModel(newModel), 1000, TimeUnit.MILLISECONDS);
 
     }
 
@@ -181,7 +183,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         if (noOfLinks < 2) return;
 
         GridBagConstraints gc = new GridBagConstraints();
-        gc.insets = new Insets(2, 2, 2, 2);
+        gc.insets = insets;
         gc.anchor = GridBagConstraints.CENTER;
 
         gc.gridx = 0;
@@ -196,7 +198,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         rxLabel.setFont(font);
         rxLabel.setRotation(VerticalLabel.ROTATE_LEFT);
 
-        add(rxLabel, gc);
+        rowPanel.add(rxLabel, gc);
 
         gc.gridx = 3;
         gc.gridy = 0;
@@ -207,7 +209,17 @@ public class RoutingMatrixPanel extends MatrixPanel {
         JLabel txLabel = new JLabel("Tx", JLabel.CENTER);
         txLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         txLabel.setFont(font);
-        add(txLabel, gc);
+        columnPanel.add(txLabel, gc);
+
+        gc = new GridBagConstraints();
+        gc.insets = insets;
+        gc.gridx = 0;
+        gc.gridy = 0;
+        gc.gridwidth = 2;
+        gc.weightx = 1;
+
+        gc.fill = GridBagConstraints.BOTH;
+        cornerPanel.add(new JPanel(), gc);
 
     }
 
@@ -215,7 +227,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
         if (noOfLinks < 2) return;
 
         GridBagConstraints gc = new GridBagConstraints();
-        gc.insets = new Insets(2, 2, 2, 2);
+        Insets insets = this.insets;
+        gc.insets = insets;
         gc.anchor = GridBagConstraints.CENTER;
 
         gc.gridx = 0;
@@ -235,7 +248,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         });
         updateCells(rxCells, rxCell);
 
-        add(rxCell, gc);
+        rowPanel.add(rxCell, gc);
 
         gc.gridx = 3;
         gc.gridy = 0;
@@ -254,7 +267,18 @@ public class RoutingMatrixPanel extends MatrixPanel {
         });
         updateCells(txCells, txCell);
 
-        add(txCell, gc);
+        columnPanel.add(txCell, gc);
+
+        gc = new GridBagConstraints();
+        gc.insets = insets;
+        gc.ipady = 3;
+        gc.gridx = 0;
+        gc.gridy = 0;
+        gc.gridwidth = 2;
+        gc.weightx = 1;
+
+        gc.fill = GridBagConstraints.BOTH;
+        cornerPanel.add(new JPanel(), gc);
     }
 
     private void updateCells(Cell<?>[] cells, Cell<?> cell) {
@@ -265,7 +289,10 @@ public class RoutingMatrixPanel extends MatrixPanel {
                 break;
             }
         }
-        cell.setSelected(allSelected);
+        if (cell != null) {
+            cell.setSelected(allSelected);
+        }
+
     }
 
     public MatrixModel getRoutingModel() {
@@ -337,11 +364,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         p.add(control, BorderLayout.NORTH);
 
-        JScrollPane pane = new JScrollPane(panel);
-        pane.setPreferredSize(new Dimension(600, 600));
-        pane.setMinimumSize(pane.getPreferredSize());
 
-        p.add(pane, BorderLayout.CENTER);
+        p.add(panel, BorderLayout.CENTER);
 
         return p;
 

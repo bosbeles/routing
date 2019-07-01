@@ -65,9 +65,9 @@ public class ConnectivityMatrixPanel extends MatrixPanel {
         JPanel p = new JPanel(new BorderLayout());
 
         p.add(combo, BorderLayout.NORTH);
-        JScrollPane pane = new JScrollPane(panel);
-        pane.setPreferredSize(new Dimension(600, 600));
-        p.add(pane, BorderLayout.CENTER);
+        //JScrollPane pane = new JScrollPane(panel);
+        //pane.setPreferredSize(new Dimension(600, 600));
+        p.add(panel, BorderLayout.CENTER);
 
 
         return p;

@@ -118,11 +118,24 @@ public class Cell<T extends Serializable> extends JPanel {
 
         this.addMouseListener(new MouseAdapter() {
             @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
             public void mousePressed(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    ActionEvent ae = new ActionEvent(Cell.this, e.getID(), "", e.getWhen(), e.getModifiers());
-                    notifyListeners(ae);
+                super.mousePressed(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (Cell.this.contains(e.getPoint())) {
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        ActionEvent ae = new ActionEvent(Cell.this, e.getID(), "", e.getWhen(), e.getModifiers());
+                        notifyListeners(ae);
+                    }
                 }
+                super.mouseReleased(e);
             }
 
             @Override

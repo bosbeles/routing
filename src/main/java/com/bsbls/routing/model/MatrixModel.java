@@ -63,6 +63,25 @@ public class MatrixModel implements Serializable {
         this.matrix = matrix;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MatrixModel)) return false;
+        MatrixModel that = (MatrixModel) o;
+        return Arrays.equals(links, that.links) &&
+                Arrays.equals(tx, that.tx) &&
+                Arrays.equals(rx, that.rx) &&
+                Arrays.deepEquals(matrix, that.matrix);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(links);
+        result = 31 * result + Arrays.hashCode(tx);
+        result = 31 * result + Arrays.hashCode(rx);
+        result = 31 * result + Arrays.hashCode(matrix);
+        return result;
+    }
 
     public static final Random RANDOM = new Random();
 
