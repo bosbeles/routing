@@ -6,6 +6,7 @@ import java.awt.*;
 public class HeaderPanel extends JPanel {
 
 
+    private static final Font FONT = new Font("TimesRoman", Font.PLAIN, 18);
     private final String left;
     private final String right;
 
@@ -22,7 +23,7 @@ public class HeaderPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        g2d.setFont(FONT);
 
         // get metrics from the graphics
         FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());

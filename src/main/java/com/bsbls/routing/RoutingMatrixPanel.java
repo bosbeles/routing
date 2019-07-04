@@ -192,7 +192,8 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.gridheight = noOfLinks - 1;
         gc.fill = GridBagConstraints.VERTICAL;
 
-        Font font = new Font("TimesRoman", Font.BOLD, 16);
+
+        Font font = Cell.FONT.deriveFont(Font.BOLD);
         VerticalLabel rxLabel = new VerticalLabel("Rx", VerticalLabel.CENTER);
         rxLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         rxLabel.setFont(font);

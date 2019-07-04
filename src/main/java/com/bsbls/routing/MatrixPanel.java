@@ -14,6 +14,8 @@ import java.util.function.Supplier;
 public class MatrixPanel extends JPanel {
 
 
+    public static final int HEIGHT = 36;
+    public static final int WIDTH = 100;
     protected MatrixModel model;
 
     protected Cell<FilterDirection>[] txCells;
@@ -93,8 +95,8 @@ public class MatrixPanel extends JPanel {
 
         pane = new JScrollPane(matrixPanel);
         pane.setMaximumSize(new Dimension(400, 400));
-        pane.getVerticalScrollBar().setUnitIncrement(20);
-        pane.getHorizontalScrollBar().setUnitIncrement(20);
+        pane.getVerticalScrollBar().setUnitIncrement(HEIGHT/2);
+        pane.getHorizontalScrollBar().setUnitIncrement(HEIGHT/2);
 
         columnPanel = new JPanel(new GridBagLayout());
         pane.setColumnHeaderView(columnPanel);
@@ -113,7 +115,7 @@ public class MatrixPanel extends JPanel {
         int yOffset = 2;
 
         gc.fill = GridBagConstraints.BOTH;
-        Dimension txDimension = new Dimension(40, 120);
+        Dimension txDimension = new Dimension(HEIGHT, WIDTH);
         for (int i = 0; i < noOfLinks; i++) {
             Cell<FilterDirection> tx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.TX, -1, i), getModel().getLinks()[i], true);
             tx.setHoverEnabled(false);
@@ -126,7 +128,7 @@ public class MatrixPanel extends JPanel {
             columnPanel.add(tx, gc);
         }
 
-        Dimension rxDimension = new Dimension(120, 40);
+        Dimension rxDimension = new Dimension(WIDTH, HEIGHT);
 
         for (int i = 0; i < noOfLinks; i++) {
             Cell<FilterDirection> rx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.RX, i, -1), getModel().getLinks()[i], false);
@@ -142,7 +144,7 @@ public class MatrixPanel extends JPanel {
         }
 
 
-        Dimension d = new Dimension(40, 40);
+        Dimension d = new Dimension(HEIGHT, HEIGHT);
         gc.fill = GridBagConstraints.NONE;
         for (int i = 0; i < noOfLinks; i++) {
             for (int j = 0; j < noOfLinks; j++) {
@@ -218,7 +220,7 @@ public class MatrixPanel extends JPanel {
         gc.gridy = 1;
         gc.anchor = GridBagConstraints.EAST;
         HeaderPanel headerPanel = new HeaderPanel("Kaynak", "Hedef");
-        headerPanel.setPreferredSize(new Dimension(120, 120));
+        headerPanel.setPreferredSize(new Dimension(WIDTH, WIDTH));
         cornerPanel.add(headerPanel, gc);
 
 
@@ -238,7 +240,7 @@ public class MatrixPanel extends JPanel {
             gc.fill = GridBagConstraints.BOTH;
             gc.weightx = 1;
             gc.weighty = 1;
-            Supplier<JPanel> panelSupplier = emptyPanel(120, 120);
+            Supplier<JPanel> panelSupplier = emptyPanel(WIDTH, WIDTH);
             matrixPanel.add(panelSupplier.get(), gc);
             columnPanel.add(panelSupplier.get(), gc);
             rowPanel.add(panelSupplier.get(), gc);

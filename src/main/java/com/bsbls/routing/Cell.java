@@ -19,6 +19,9 @@ public class Cell<T extends Serializable> extends JPanel {
     public static final Color BORDER_COLOR = new Color(147, 147, 147);
     public static final String TICK = "\u2714";
 
+    public static final Font FONT = new Font("TimesRoman", Font.PLAIN, 12);
+    public static final int FILTER_ICON_SIZE = 8;
+
 
     private static ImageIcon whiteFilterIcon;
     private static ImageIcon blackFilterIcon;
@@ -92,20 +95,20 @@ public class Cell<T extends Serializable> extends JPanel {
         } else {
             centerLabel.setRotation(VerticalLabel.DONT_ROTATE);
         }
-        this.centerLabel.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+        this.centerLabel.setFont(FONT);
 
         setLayout(new BorderLayout());
 
 
         JPanel panel = emptyPanel(getWidth(), padding);
-        panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 2, 2));
+        panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 1, 1));
         panel.add(upperLabel);
         this.add(panel, BorderLayout.NORTH);
 
         JPanel p2 = new JPanel(new GridBagLayout());
         p2.setOpaque(false);
         GridBagConstraints gc = new GridBagConstraints();
-        gc.insets = new Insets(0, 5, 0, 5);
+        gc.insets = new Insets(0, 3, 0, 3);
         p2.add(this.centerLabel, gc);
 
         this.add(p2, BorderLayout.CENTER);
@@ -298,7 +301,7 @@ public class Cell<T extends Serializable> extends JPanel {
 
     public static ImageIcon getWhiteFilterIcon() {
         if (whiteFilterIcon == null) {
-            whiteFilterIcon = new ImageIcon(new ImageIcon(Cell.class.getResource("/filled-filter-16-white.png")).getImage().getScaledInstance(8, 8, Image.SCALE_SMOOTH));
+            whiteFilterIcon = new ImageIcon(new ImageIcon(Cell.class.getResource("/filled-filter-16-white.png")).getImage().getScaledInstance(FILTER_ICON_SIZE, FILTER_ICON_SIZE, Image.SCALE_SMOOTH));
         }
         return whiteFilterIcon;
     }
@@ -306,7 +309,7 @@ public class Cell<T extends Serializable> extends JPanel {
 
     public static ImageIcon getBlackFilterIcon() {
         if (blackFilterIcon == null) {
-            blackFilterIcon = new ImageIcon(new ImageIcon(Cell.class.getResource("/filled-filter-16-black.png")).getImage().getScaledInstance(8, 8, Image.SCALE_SMOOTH));
+            blackFilterIcon = new ImageIcon(new ImageIcon(Cell.class.getResource("/filled-filter-16-black.png")).getImage().getScaledInstance(FILTER_ICON_SIZE, FILTER_ICON_SIZE, Image.SCALE_SMOOTH));
         }
         return blackFilterIcon;
     }
