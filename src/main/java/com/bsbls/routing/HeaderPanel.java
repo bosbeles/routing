@@ -14,7 +14,9 @@ public class HeaderPanel extends JPanel {
         super();
         this.left = left;
         this.right = right;
-        setPreferredSize(new Dimension(120, 120));
+        int wl = SwingUtilities.computeStringWidth(this.getFontMetrics(FONT), left);
+        int wr = SwingUtilities.computeStringWidth(this.getFontMetrics(FONT), right);
+        setMinimumSize(new Dimension(wr + wl, wr + wl));
     }
 
     @Override
@@ -40,16 +42,16 @@ public class HeaderPanel extends JPanel {
         // text with some padding.
 
 
-        Point point = leftTriangle(getWidth(), getHeight(), fromWidth, hgt);
+        Point point = leftTriangle(getWidth(), getHeight() - 8, fromWidth, hgt);
         g2d.drawString(this.left, point.x, point.y + hgt - 4);
 
 
-        point = rightTriangle(getWidth(), getHeight(), toWidth, hgt);
+        point = rightTriangle(getWidth(), getHeight() - 8, toWidth, hgt);
         g2d.drawString(this.right, point.x, point.y + hgt);
 
 
         g2d.setStroke(new BasicStroke(2f));
-        g2d.drawLine(0, 0, this.getWidth(), this.getHeight());
+        g2d.drawLine(0, 0, this.getWidth(), this.getHeight() - 8);
 
     }
 

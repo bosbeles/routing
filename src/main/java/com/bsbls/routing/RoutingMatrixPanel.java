@@ -29,7 +29,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
 
     public RoutingMatrixPanel() {
-        super();
+        super(12f, 14);
         popupMenu = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Go to Filters...");
         menuItem.addActionListener(e -> {
@@ -216,11 +216,15 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.insets = insets;
         gc.gridx = 0;
         gc.gridy = 0;
-        gc.gridwidth = 2;
-        gc.weightx = 1;
 
-        gc.fill = GridBagConstraints.BOTH;
-        cornerPanel.add(new JPanel(), gc);
+        JPanel panel = new JPanel() {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(rxLabel.getWidth(), txLabel.getHeight());
+            }
+        };
+
+        cornerPanel.add(panel, gc);
 
     }
 
@@ -238,8 +242,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.gridheight = noOfLinks - 1;
         gc.fill = GridBagConstraints.VERTICAL;
 
-        rxCell = new Cell<>(null, "Rx", "Rx", true, 5);
-        rxCell.setPreferredSize(new Dimension(30, 10));
+        rxCell = new Cell<>(null, "Rx", "Rx", true, 0, 5, fontSize);
         rxCell.addActionListener(e -> {
             rxCell.setSelected(!rxCell.isSelected());
             Arrays.fill(model.getRx(), rxCell.isSelected());
@@ -257,8 +260,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.gridheight = 1;
         gc.fill = GridBagConstraints.HORIZONTAL;
 
-        txCell = new Cell<>(null, "Tx", "Tx", false, 5);
-        txCell.setPreferredSize(new Dimension(10, 30));
+        txCell = new Cell<>(null, "Tx", "Tx", false, 0, 5, fontSize);
         txCell.addActionListener(e -> {
             txCell.setSelected(!txCell.isSelected());
             Arrays.fill(model.getTx(), txCell.isSelected());
@@ -272,14 +274,18 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         gc = new GridBagConstraints();
         gc.insets = insets;
-        gc.ipady = 3;
         gc.gridx = 0;
         gc.gridy = 0;
-        gc.gridwidth = 2;
-        gc.weightx = 1;
 
-        gc.fill = GridBagConstraints.BOTH;
-        cornerPanel.add(new JPanel(), gc);
+        JPanel panel = new JPanel() {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(rxCell.getWidth(), txCell.getHeight());
+            }
+        };
+
+
+        cornerPanel.add(panel, gc);
     }
 
     private void updateCells(Cell<?>[] cells, Cell<?> cell) {

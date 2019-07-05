@@ -14,8 +14,8 @@ import java.util.function.Supplier;
 public class MatrixPanel extends JPanel {
 
 
-    public static final int HEIGHT = 36;
-    public static final int WIDTH = 100;
+    protected final int padx;
+    protected final float fontSize;
     protected MatrixModel model;
 
     protected Cell<FilterDirection>[] txCells;
@@ -31,8 +31,10 @@ public class MatrixPanel extends JPanel {
     protected JScrollPane pane;
     private boolean dragging;
 
-    public MatrixPanel() {
+    public MatrixPanel(float fontSize, int padx) {
         super();
+        this.fontSize = fontSize;
+        this.padx = padx;
         setPreferredSize(new Dimension(400, 400));
     }
 
@@ -95,8 +97,8 @@ public class MatrixPanel extends JPanel {
 
         pane = new JScrollPane(matrixPanel);
         pane.setMaximumSize(new Dimension(400, 400));
-        pane.getVerticalScrollBar().setUnitIncrement(HEIGHT/2);
-        pane.getHorizontalScrollBar().setUnitIncrement(HEIGHT/2);
+        pane.getVerticalScrollBar().setUnitIncrement(HEIGHT / 2);
+        pane.getHorizontalScrollBar().setUnitIncrement(HEIGHT / 2);
 
         columnPanel = new JPanel(new GridBagLayout());
         pane.setColumnHeaderView(columnPanel);
@@ -114,43 +116,19 @@ public class MatrixPanel extends JPanel {
         int xOffset = 2;
         int yOffset = 2;
 
+
         gc.fill = GridBagConstraints.BOTH;
-        Dimension txDimension = new Dimension(HEIGHT, WIDTH);
-        for (int i = 0; i < noOfLinks; i++) {
-            Cell<FilterDirection> tx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.TX, -1, i), getModel().getLinks()[i], true);
-            tx.setHoverEnabled(false);
-            txCells[i] = tx;
-
-            gc.gridx = xOffset + i;
-            gc.gridy = yOffset - 1;
-
-            tx.setPreferredSize(txDimension);
-            columnPanel.add(tx, gc);
-        }
-
-        Dimension rxDimension = new Dimension(WIDTH, HEIGHT);
-
-        for (int i = 0; i < noOfLinks; i++) {
-            Cell<FilterDirection> rx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.RX, i, -1), getModel().getLinks()[i], false);
-            rx.setHoverEnabled(false);
-            rxCells[i] = rx;
-
-            gc.gridx = xOffset - 1;
-            gc.gridy = yOffset + i;
-
-
-            rx.setPreferredSize(rxDimension);
-            rowPanel.add(rx, gc);
-        }
-
-
-        Dimension d = new Dimension(HEIGHT, HEIGHT);
-        gc.fill = GridBagConstraints.NONE;
         for (int i = 0; i < noOfLinks; i++) {
             for (int j = 0; j < noOfLinks; j++) {
-                Cell<FilterDirection> cell = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.ROUTING, i, j), Cell.TICK, "", false);
-                cell.setPreferredSize(d);
-                cell.setMinimumSize(d);
+                Cell<FilterDirection> cell = new Cell<FilterDirection>(new FilterDirection(FilterDirection.FilterDirectionType.ROUTING, i, j), Cell.TICK, "", false, fontSize) {
+                    @Override
+                    public Dimension getPreferredSize() {
+                        Dimension d = rxCells[getData().getFrom()].getPreferredSize();
+                        int max = Math.max(d.height, d.height);
+                        return new Dimension(max, max);
+                    }
+                };
+
                 matrixCells[i][j] = cell;
 
 
@@ -216,13 +194,46 @@ public class MatrixPanel extends JPanel {
             }
         }
 
+        for (int i = 0; i < noOfLinks; i++) {
+            Cell<FilterDirection> rx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.RX, i, -1), getModel().getLinks()[i], false, padx, fontSize);
+
+            rx.setHoverEnabled(false);
+            rxCells[i] = rx;
+
+            gc.gridx = xOffset - 1;
+            gc.gridy = yOffset + i;
+
+            rowPanel.add(rx, gc);
+        }
+
+        gc.fill = GridBagConstraints.BOTH;
+        for (int i = 0; i < noOfLinks; i++) {
+            Cell<FilterDirection> tx = new Cell<FilterDirection>(new FilterDirection(FilterDirection.FilterDirectionType.TX, -1, i), getModel().getLinks()[i], true, fontSize) {
+                @Override
+                public Dimension getPreferredSize() {
+                    int index = getData().getTo();
+                    Dimension d = rxCells[index].getPreferredSize();
+                    return new Dimension(d.height, d.width);
+                }
+            };
+            tx.setHoverEnabled(false);
+            txCells[i] = tx;
+
+            gc.gridx = xOffset + i;
+            gc.gridy = yOffset - 1;
+
+            columnPanel.add(tx, gc);
+        }
+
+
         gc.gridx = 1;
         gc.gridy = 1;
         gc.anchor = GridBagConstraints.EAST;
+        gc.fill = GridBagConstraints.BOTH;
+        gc.weighty = 1;
+        gc.weightx = 1;
         HeaderPanel headerPanel = new HeaderPanel("Kaynak", "Hedef");
-        headerPanel.setPreferredSize(new Dimension(WIDTH, WIDTH));
         cornerPanel.add(headerPanel, gc);
-
 
         if (noOfLinks > 0) {
             gc.gridx = 0;
@@ -240,7 +251,7 @@ public class MatrixPanel extends JPanel {
             gc.fill = GridBagConstraints.BOTH;
             gc.weightx = 1;
             gc.weighty = 1;
-            Supplier<JPanel> panelSupplier = emptyPanel(WIDTH, WIDTH);
+            Supplier<JPanel> panelSupplier = emptyPanel(headerPanel.getMinimumSize().width, headerPanel.getMinimumSize().height);
             matrixPanel.add(panelSupplier.get(), gc);
             columnPanel.add(panelSupplier.get(), gc);
             rowPanel.add(panelSupplier.get(), gc);

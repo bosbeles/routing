@@ -10,6 +10,10 @@ import java.util.Arrays;
 public class ConnectivityMatrixPanel extends MatrixPanel {
 
 
+    public ConnectivityMatrixPanel() {
+        super(14f, 30);
+    }
+
     @Override
     public void setModel(MatrixModel model) {
         if (model != null) {

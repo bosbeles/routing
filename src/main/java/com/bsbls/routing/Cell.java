@@ -25,7 +25,9 @@ public class Cell<T extends Serializable> extends JPanel {
 
     private static ImageIcon whiteFilterIcon;
     private static ImageIcon blackFilterIcon;
-    private final int padding;
+    private final int padx;
+    private final int pady;
+    private float fontSize;
 
 
     protected T data;
@@ -58,17 +60,27 @@ public class Cell<T extends Serializable> extends JPanel {
     }
 
     public Cell(T data, String selectedText, boolean vertical) {
-        this(data, selectedText, selectedText, vertical);
+        this(data, selectedText, selectedText, vertical, 0f);
     }
 
-    public Cell(T data, String selectedText, String deselectedText, boolean vertical) {
-        this(data, selectedText, deselectedText, vertical, 10);
+    public Cell(T data, String selectedText, boolean vertical, float fontSize) {
+        this(data, selectedText, selectedText, vertical, fontSize);
     }
 
-    public Cell(T data, String selectedText, String deselectedText, boolean vertical, int padding) {
+    public Cell(T data, String selectedText, boolean vertical, int padx, float fontSize) {
+        this(data, selectedText, selectedText, vertical, padx, FILTER_ICON_SIZE + 2, 0);
+    }
+
+    public Cell(T data, String selectedText, String deselectedText, boolean vertical, float fontSize) {
+        this(data, selectedText, deselectedText, vertical, 0, FILTER_ICON_SIZE + 2, 0);
+    }
+
+    public Cell(T data, String selectedText, String deselectedText, boolean vertical, int padx, int pady, float fontSize) {
         super();
-        this.padding = padding;
+        this.padx = padx;
+        this.pady = pady;
         this.data = data;
+        this.fontSize = fontSize;
         this.vertical = vertical;
         this.text = selectedText == null ? "" : selectedText;
         this.deselectedText = deselectedText == null ? "" : deselectedText;
@@ -95,12 +107,12 @@ public class Cell<T extends Serializable> extends JPanel {
         } else {
             centerLabel.setRotation(VerticalLabel.DONT_ROTATE);
         }
-        this.centerLabel.setFont(FONT);
+        this.centerLabel.setFont(fontSize > 0 ? FONT.deriveFont(fontSize) : FONT);
 
         setLayout(new BorderLayout());
 
 
-        JPanel panel = emptyPanel(getWidth(), padding);
+        JPanel panel = emptyPanel(getWidth(), pady);
         panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 1, 1));
         panel.add(upperLabel);
         this.add(panel, BorderLayout.NORTH);
@@ -108,12 +120,13 @@ public class Cell<T extends Serializable> extends JPanel {
         JPanel p2 = new JPanel(new GridBagLayout());
         p2.setOpaque(false);
         GridBagConstraints gc = new GridBagConstraints();
-        gc.insets = new Insets(0, 3, 0, 3);
+        gc.insets = new Insets(0, 3 + padx, 0, 3);
+        gc.ipadx = this.padx;
         p2.add(this.centerLabel, gc);
 
         this.add(p2, BorderLayout.CENTER);
 
-        JPanel empty = emptyPanel(getWidth(), padding);
+        JPanel empty = emptyPanel(getWidth(), pady);
         this.add(empty, BorderLayout.SOUTH);
     }
 
