@@ -243,6 +243,7 @@ public class MatrixPanel extends JPanel {
             gc.weighty = 1;
             gc.fill = GridBagConstraints.BOTH;
             gc.anchor = GridBagConstraints.CENTER;
+            gc.insets = new Insets(0,0,0,0);
             matrixPanel.add(new JPanel(), gc);
             columnPanel.add(new JPanel(), gc);
             rowPanel.add(new JPanel(), gc);

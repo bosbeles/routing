@@ -120,7 +120,7 @@ public class Cell<T extends Serializable> extends JPanel {
         JPanel p2 = new JPanel(new GridBagLayout());
         p2.setOpaque(false);
         GridBagConstraints gc = new GridBagConstraints();
-        gc.insets = new Insets(0, 3 + padx, 0, 3);
+        gc.insets = new Insets(0, 1 + padx, 0, 1);
         gc.ipadx = this.padx;
         p2.add(this.centerLabel, gc);
 

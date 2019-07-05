@@ -29,7 +29,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
 
     public RoutingMatrixPanel() {
-        super(30f, 20);
+        super(14f, 15);
         popupMenu = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Go to Filters...");
         menuItem.addActionListener(e -> {
@@ -242,7 +242,12 @@ public class RoutingMatrixPanel extends MatrixPanel {
         gc.gridheight = noOfLinks - 1;
         gc.fill = GridBagConstraints.VERTICAL;
 
-        rxCell = new Cell<>(null, "Rx", "Rx", true, 0, 5, fontSize);
+        rxCell = new Cell(null, "Rx", "Rx", true, 0, 5, fontSize) {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(txCell.getHeight(), super.getPreferredSize().width);
+            }
+        };
         rxCell.addActionListener(e -> {
             rxCell.setSelected(!rxCell.isSelected());
             Arrays.fill(model.getRx(), rxCell.isSelected());
@@ -250,6 +255,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
             refresh();
             modelChanged();
         });
+
         updateCells(rxCells, rxCell);
 
         rowPanel.add(rxCell, gc);
