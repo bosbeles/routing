@@ -50,6 +50,7 @@ public class HeaderPanel extends JPanel {
         g2d.drawString(this.right, point.x, point.y + hgt);
 
 
+        g2d.setColor(Cell.PRIMARY_COLOR);
         g2d.setStroke(new BasicStroke(2f));
         g2d.drawLine(0, 0, this.getWidth(), this.getHeight() - 8);
 
