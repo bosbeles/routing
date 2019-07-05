@@ -68,11 +68,11 @@ public class Cell<T extends Serializable> extends JPanel {
     }
 
     public Cell(T data, String selectedText, boolean vertical, int padx, float fontSize) {
-        this(data, selectedText, selectedText, vertical, padx, FILTER_ICON_SIZE + 2, 0);
+        this(data, selectedText, selectedText, vertical, padx, FILTER_ICON_SIZE + 2, fontSize);
     }
 
     public Cell(T data, String selectedText, String deselectedText, boolean vertical, float fontSize) {
-        this(data, selectedText, deselectedText, vertical, 0, FILTER_ICON_SIZE + 2, 0);
+        this(data, selectedText, deselectedText, vertical, 0, FILTER_ICON_SIZE + 2, fontSize);
     }
 
     public Cell(T data, String selectedText, String deselectedText, boolean vertical, int padx, int pady, float fontSize) {

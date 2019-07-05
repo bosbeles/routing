@@ -29,7 +29,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
 
     public RoutingMatrixPanel() {
-        super(12f, 14);
+        super(30f, 20);
         popupMenu = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Go to Filters...");
         menuItem.addActionListener(e -> {
