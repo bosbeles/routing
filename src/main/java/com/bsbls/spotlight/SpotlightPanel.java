@@ -31,9 +31,6 @@ public class SpotlightPanel extends JComponent implements MouseListener {
         hints.put(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     }
 
-    public Spotlight addSpotlight(int x, int y, int radius) {
-        return addSpotlight(x, y, radius, radius);
-    }
 
     public Spotlight addSpotlight(int x, int y, int w, int h) {
         if (spotlights.size() == 0) {
@@ -103,7 +100,6 @@ public class SpotlightPanel extends JComponent implements MouseListener {
                 g2buffer.setRenderingHints(hints);
                 g2buffer.setColor(shieldColor);
                 g2buffer.fill(mask);
-
                 g2.drawImage(buffer, blurOp, 0, 0);
             } else {
                 g2.setRenderingHints(hints);

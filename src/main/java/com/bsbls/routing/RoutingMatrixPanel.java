@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class RoutingMatrixPanel extends MatrixPanel {
 
 
+    private static Timer timer;
     private final Insets insets = new Insets(2, 2, 2, 2);
     private Cell<?> rxCell;
     private Cell<?> txCell;
@@ -383,16 +384,24 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         resetModel.addActionListener(e -> {
             panel.reset();
-            SpotlightPanel glass = new SpotlightPanel(true);
-            p.getRootPane().setGlassPane(glass);
+            EventQueue.invokeLater(()->{
+                SpotlightPanel glass = new SpotlightPanel();
+                p.getRootPane().setGlassPane(glass);
 
-            JComponent component = control;
-            Point point = component.getLocationOnScreen();
-            SwingUtilities.convertPointFromScreen(point, p.getRootPane());
-            glass.addSpotlight(point.x - 4, point.y - 4, component.getWidth()+8, component.getHeight()+8);
-            Timer t = new Timer(2000, null);
-            t.addActionListener(ev-> glass.clearSpotlights());
-            t.start();
+                JComponent component = control;
+                Point point = component.getLocationOnScreen();
+                SwingUtilities.convertPointFromScreen(point, p.getRootPane());
+                glass.addSpotlight(point.x - 1, point.y - 1, component.getWidth()+2, component.getHeight()+2);
+                if(timer != null) {
+                    timer.stop();
+                }
+                timer = new Timer(2000, null);
+
+                timer.addActionListener(ev-> glass.clearSpotlights());
+                timer.start();
+
+            });
+
 
         });
 
