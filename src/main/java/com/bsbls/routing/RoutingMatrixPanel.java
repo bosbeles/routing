@@ -2,6 +2,7 @@ package com.bsbls.routing;
 
 import com.bsbls.routing.model.FilterDirection;
 import com.bsbls.routing.model.MatrixModel;
+import com.bsbls.spotlight.SpotlightPanel;
 import com.bsbls.test.GUITester;
 
 import javax.swing.*;
@@ -19,6 +20,11 @@ public class RoutingMatrixPanel extends MatrixPanel {
     private Cell<?> rxCell;
     private Cell<?> txCell;
     private final JPopupMenu popupMenu;
+
+    @Override
+    public void setModel(MatrixModel model) {
+        super.setModel(model);
+    }
 
     private enum TxRx {NO_LABEL, TX_RX_LABEL, TX_RX_BUTTON}
 
@@ -364,7 +370,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
         });
 
         JButton resetModel = new JButton("Reset");
-        resetModel.addActionListener(e -> panel.reset());
+
 
 
         JPanel control = new JPanel();
@@ -374,6 +380,21 @@ public class RoutingMatrixPanel extends MatrixPanel {
         control.add(filterUpdate);
 
         control.add(resetModel);
+
+        resetModel.addActionListener(e -> {
+            panel.reset();
+            SpotlightPanel glass = new SpotlightPanel(true);
+            p.getRootPane().setGlassPane(glass);
+
+            JComponent component = control;
+            Point point = component.getLocationOnScreen();
+            SwingUtilities.convertPointFromScreen(point, p.getRootPane());
+            glass.addSpotlight(point.x - 4, point.y - 4, component.getWidth()+8, component.getHeight()+8);
+            Timer t = new Timer(2000, null);
+            t.addActionListener(ev-> glass.clearSpotlights());
+            t.start();
+
+        });
 
         p.add(control, BorderLayout.NORTH);
 
