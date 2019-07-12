@@ -24,6 +24,50 @@ public class GUITester {
         // Get all the available look and feel that we are going to use for
         // creating the JMenuItem and assign the action listener to handle
         // the selection of menu item to change the look and feel.
+
+
+        String[] lafs = {
+                "org.pushingpixels.substance.api.skin.SubstanceAutumnLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceBusinessBlueSteelLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceCeruleanLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceChallengerDeepLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceCremeCoffeeLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceCremeLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceDustCoffeeLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceDustLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceEmeraldDuskLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceGeminiLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceGraphiteAquaLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceGraphiteGlassLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceMagellanLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceMarinerLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceMistSilverLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceModerateLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceNebulaBrickWallLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceNebulaLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceOfficeBlack2007LookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceOfficeBlue2007LookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceOfficeSilver2007LookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceRavenLookAndFeel",
+                "org.pushingpixels.substance.api.skin.SubstanceTwilightLookAndFeel"
+        };
+
+        UIManager.installLookAndFeel("Darcula", "com.bulenkov.darcula.DarculaLaf");
+
+        for (String lafClass : lafs) {
+            String simpleName = lafClass.substring(lafClass.lastIndexOf('.') + 1);
+            int from = "Substance".length();
+            int to = simpleName.indexOf("LookAndFeel");
+            String name = simpleName.substring(from, to);
+            UIManager.installLookAndFeel(name, lafClass);
+        }
+
+
+
         UIManager.LookAndFeelInfo[] lookAndFeels = UIManager.getInstalledLookAndFeels();
         for (UIManager.LookAndFeelInfo lookAndFeelInfo : lookAndFeels) {
             JMenuItem item = new JMenuItem(lookAndFeelInfo.getName());

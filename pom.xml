@@ -14,6 +14,22 @@
     </properties>
 
 
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.github.insubstantial/substance -->
+        <dependency>
+            <groupId>com.github.insubstantial</groupId>
+            <artifactId>substance</artifactId>
+            <version>7.3</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.bulenkov</groupId>
+            <artifactId>darcula</artifactId>
+            <version>2018.2</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
