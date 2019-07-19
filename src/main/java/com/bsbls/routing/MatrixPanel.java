@@ -35,7 +35,18 @@ public class MatrixPanel extends JPanel {
         super();
         this.fontSize = fontSize;
         this.padx = padx;
-        setPreferredSize(new Dimension(400, 400));
+        setMinimumSize(new Dimension(400, 400));
+        setMaximumSize(new Dimension(800,800));
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        Dimension minimumSize = getMinimumSize();
+
+        int w = Math.min(Math.max(super.getPreferredSize().width + 60, minimumSize.width), getMaximumSize().width);
+
+
+        return new Dimension(w, w);
     }
 
     public void refresh() {
@@ -96,7 +107,6 @@ public class MatrixPanel extends JPanel {
         }
 
         pane = new JScrollPane(matrixPanel);
-        pane.setMaximumSize(new Dimension(400, 400));
         pane.getVerticalScrollBar().setUnitIncrement(HEIGHT / 2);
         pane.getHorizontalScrollBar().setUnitIncrement(HEIGHT / 2);
 
@@ -120,7 +130,8 @@ public class MatrixPanel extends JPanel {
         gc.fill = GridBagConstraints.BOTH;
         for (int i = 0; i < noOfLinks; i++) {
             for (int j = 0; j < noOfLinks; j++) {
-                Cell<FilterDirection> cell = new Cell<FilterDirection>(new FilterDirection(FilterDirection.FilterDirectionType.ROUTING, i, j), Cell.TICK, "", false, fontSize) {
+                FilterDirection filterDirection = new FilterDirection(FilterDirection.FilterDirectionType.ROUTING, i, j);
+                Cell<FilterDirection> cell = new Cell<FilterDirection>(filterDirection, Cell.TICK, "", false, fontSize) {
                     @Override
                     public Dimension getPreferredSize() {
                         Dimension d = rxCells[getData().getFrom()].getPreferredSize();
@@ -131,8 +142,9 @@ public class MatrixPanel extends JPanel {
 
                 matrixCells[i][j] = cell;
 
+                JPanel cellPanel = i == j ? new JPanel() : cell;
 
-                cell.addMouseMotionListener(new MouseMotionAdapter() {
+                cellPanel.addMouseMotionListener(new MouseMotionAdapter() {
                     @Override
                     public void mouseDragged(MouseEvent e) {
 
@@ -141,7 +153,7 @@ public class MatrixPanel extends JPanel {
                     }
                 });
 
-                cell.addMouseListener(new MouseAdapter() {
+                cellPanel.addMouseListener(new MouseAdapter() {
 
                     @Override
                     public void mousePressed(MouseEvent e) {
@@ -160,9 +172,11 @@ public class MatrixPanel extends JPanel {
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         FilterDirection fd = cell.getData();
-                        rxCells[fd.getFrom()].highlight();
-                        txCells[fd.getTo()].highlight();
-                        last = fd;
+                        if(!dragging) {
+                            rxCells[fd.getFrom()].highlight();
+                            txCells[fd.getTo()].highlight();
+                            last = fd;
+                        }
                     }
 
                     @Override
@@ -187,10 +201,8 @@ public class MatrixPanel extends JPanel {
                 gc.gridx = xOffset + j;
                 gc.gridy = yOffset + i;
 
-                if (i != j) {
-                    matrixPanel.add(cell, gc);
-                }
 
+                matrixPanel.add(cellPanel, gc);
             }
         }
 
@@ -314,6 +326,7 @@ public class MatrixPanel extends JPanel {
             if (!Objects.equals(this.model, model)) {
                 this.model = model;
                 updatePanel();
+                SwingUtilities.getWindowAncestor(this).pack();
             }
         });
 

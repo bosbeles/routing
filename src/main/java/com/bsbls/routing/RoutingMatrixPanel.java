@@ -360,7 +360,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
             fixModel(newModel);
             panel.setRoutingModel(newModel);
 
-            // SwingUtilities.getWindowAncestor(panel).pack();
+
         });
 
         JButton filterUpdate = new JButton("Update Filters");
@@ -368,6 +368,7 @@ public class RoutingMatrixPanel extends MatrixPanel {
             MatrixModel newFilterModel = MatrixModel.randomModel(noOfLinks);
             fixFilterModel(newFilterModel);
             panel.setFilterModel(newFilterModel);
+
         });
 
         JButton resetModel = new JButton("Reset");
