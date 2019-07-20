@@ -37,7 +37,7 @@ public class MatrixPanel extends JPanel {
         this.fontSize = fontSize;
         this.padx = padx;
         setMinimumSize(new Dimension(400, 400));
-        setMaximumSize(new Dimension(800,800));
+        setMaximumSize(new Dimension(800, 800));
     }
 
     @Override
@@ -184,17 +184,17 @@ public class MatrixPanel extends JPanel {
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         FilterDirection fd = last;
-                        if(fd != null) {
+                        if (fd != null) {
                             rxCells[fd.getFrom()].dehighlight();
                             txCells[fd.getTo()].dehighlight();
 
                         }
-                        if(lastCell != null) {
+                        if (lastCell != null) {
                             lastCell.dehighlight();
                         }
                         fd = cell.getData();
 
-                        if(!dragging) {
+                        if (!dragging) {
                             rxCells[fd.getFrom()].highlight();
                             txCells[fd.getTo()].highlight();
                             last = fd;
@@ -286,7 +286,7 @@ public class MatrixPanel extends JPanel {
             gc.weighty = 1;
             gc.fill = GridBagConstraints.BOTH;
             gc.anchor = GridBagConstraints.CENTER;
-            gc.insets = new Insets(0,0,0,0);
+            gc.insets = new Insets(0, 0, 0, 0);
             matrixPanel.add(new JPanel(), gc);
             columnPanel.add(new JPanel(), gc);
             rowPanel.add(new JPanel(), gc);

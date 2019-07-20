@@ -377,7 +377,6 @@ public class RoutingMatrixPanel extends MatrixPanel {
         JButton resetModel = new JButton("Reset");
 
 
-
         JPanel control = new JPanel();
 
         control.add(modelUpdate);
@@ -388,20 +387,20 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         resetModel.addActionListener(e -> {
             panel.reset();
-            EventQueue.invokeLater(()->{
+            EventQueue.invokeLater(() -> {
                 SpotlightPanel glass = new SpotlightPanel();
                 p.getRootPane().setGlassPane(glass);
 
                 JComponent component = control;
                 Point point = component.getLocationOnScreen();
                 SwingUtilities.convertPointFromScreen(point, p.getRootPane());
-                glass.addSpotlight(point.x - 1, point.y - 1, component.getWidth()+2, component.getHeight()+2);
-                if(timer != null) {
+                glass.addSpotlight(point.x - 1, point.y - 1, component.getWidth() + 2, component.getHeight() + 2);
+                if (timer != null) {
                     timer.stop();
                 }
                 timer = new Timer(2000, null);
 
-                timer.addActionListener(ev-> glass.clearSpotlights());
+                timer.addActionListener(ev -> glass.clearSpotlights());
                 timer.start();
 
             });
