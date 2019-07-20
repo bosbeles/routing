@@ -30,6 +30,7 @@ public class MatrixPanel extends JPanel {
     protected Point origin;
     protected JScrollPane pane;
     private boolean dragging;
+    protected Cell<FilterDirection> lastCell;
 
     public MatrixPanel(float fontSize, int padx) {
         super();
@@ -83,6 +84,7 @@ public class MatrixPanel extends JPanel {
             public void mouseDragged(MouseEvent e) {
                 onMouseDragged(e);
             }
+
         });
 
 
@@ -99,6 +101,16 @@ public class MatrixPanel extends JPanel {
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 dragging = false;
                 super.mouseReleased(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                dehighlight();
             }
         });
         Point oldPosition = null;
@@ -171,20 +183,28 @@ public class MatrixPanel extends JPanel {
 
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        FilterDirection fd = cell.getData();
+                        FilterDirection fd = last;
+                        if(fd != null) {
+                            rxCells[fd.getFrom()].dehighlight();
+                            txCells[fd.getTo()].dehighlight();
+
+                        }
+                        if(lastCell != null) {
+                            lastCell.dehighlight();
+                        }
+                        fd = cell.getData();
+
                         if(!dragging) {
                             rxCells[fd.getFrom()].highlight();
                             txCells[fd.getTo()].highlight();
                             last = fd;
+                            lastCell = cell;
                         }
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        FilterDirection fd = cell.getData();
-                        rxCells[fd.getFrom()].dehighlight();
-                        txCells[fd.getTo()].dehighlight();
-                        last = null;
+                        super.mouseExited(e);
                     }
 
                     @Override
@@ -208,7 +228,12 @@ public class MatrixPanel extends JPanel {
 
         for (int i = 0; i < noOfLinks; i++) {
             Cell<FilterDirection> rx = new Cell<>(new FilterDirection(FilterDirection.FilterDirectionType.RX, i, -1), getModel().getLinks()[i], false, padx, fontSize);
-
+            rx.addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    dehighlight();
+                }
+            });
             rx.setHoverEnabled(false);
             rxCells[i] = rx;
 
@@ -228,6 +253,12 @@ public class MatrixPanel extends JPanel {
                     return new Dimension(d.height, d.width);
                 }
             };
+            tx.addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    dehighlight();
+                }
+            });
             tx.setHoverEnabled(false);
             txCells[i] = tx;
 
@@ -281,6 +312,20 @@ public class MatrixPanel extends JPanel {
         repaint();
         refresh();
 
+    }
+
+    private void dehighlight() {
+        FilterDirection fd = last;
+        if (fd != null) {
+            rxCells[fd.getFrom()].dehighlight();
+            txCells[fd.getTo()].dehighlight();
+
+        }
+        if (lastCell != null) {
+            lastCell.dehighlight();
+        }
+        lastCell = null;
+        last = null;
     }
 
     private void onMouseDragged(MouseEvent e) {

@@ -123,9 +123,12 @@ public class RoutingMatrixPanel extends MatrixPanel {
             for (int j = 0; j < noOfLinks; j++) {
                 matrixCells[i][j].setEnabled(rxCells[i].isSelected() && txCells[j].isSelected());
                 if (last != null && last.getTo() == j && last.getFrom() == i) {
-                    matrixCells[last.getFrom()][last.getTo()].highlight();
+                    lastCell = matrixCells[last.getFrom()][last.getTo()];
+                    last = lastCell.getData();
+                    lastCell.highlight();
                     txCells[last.getTo()].highlight();
                     rxCells[last.getFrom()].highlight();
+
                 }
             }
         }
