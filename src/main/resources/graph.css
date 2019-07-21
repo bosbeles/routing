@@ -1,0 +1,33 @@
+node {
+    shape: box;
+    size: 30px, 30px;
+    fill-mode: plain;
+    fill-color: #FA8072;
+    stroke-mode: plain;
+
+}
+
+node.own {
+    shape: box;
+    size: 30px, 30px;
+    fill-mode: plain;
+    fill-color: #00BFFF;
+    stroke-mode: plain;
+
+}
+
+edge {
+    text-alignment: along;
+    text-offset: 0px, 15px;
+    text-size: 12px;
+}
+
+
+node.link {
+	shape: circle;
+	size: 40px, 40px;
+	fill-mode: plain;   /* Default.          */
+	fill-color: white;    /* Default is black. */
+	stroke-mode: plain; /* Default is none.  */
+	stroke-color: black; /* Default is black. */
+}
