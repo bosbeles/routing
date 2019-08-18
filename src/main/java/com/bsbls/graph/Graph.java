@@ -69,6 +69,12 @@ public class Graph {
         createEdge(graph, "10-1008", "1008", "10");
         createEdge(graph, "16-1008", "1008", "16");
 
+
+        createEdge(graph, "1001-1006", "1001", "1006", "conn", true);
+        createEdge(graph, "1007-1006", "1007", "1006", "conn", false);
+
+
+
         for (Node node : graph) {
             if (!node.hasAttribute("ui.label")) {
                 node.addAttribute("ui.label", node.getId());
@@ -94,9 +100,10 @@ public class Graph {
         return edge;
     }
 
-    private static Edge createEdge(org.graphstream.graph.Graph graph, String id, String node1, String node2, String label) {
-        Edge edge = graph.addEdge(id, node1, node2);
-        edge.setAttribute("ui.label", label);
+    private static Edge createEdge(org.graphstream.graph.Graph graph, String id, String node1, String node2, String className, boolean directed) {
+        Edge edge = graph.addEdge(id, node1, node2, directed);
+
+        edge.setAttribute("ui.class", className);
         return edge;
     }
 

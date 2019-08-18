@@ -20,6 +20,16 @@ edge {
     text-alignment: along;
     text-offset: 0px, 15px;
     text-size: 12px;
+
+}
+
+edge.conn {
+    text-alignment: along;
+    text-offset: 0px, 15px;
+    text-size: 12px;
+
+    fill-color: red;
+    shape: cubic-curve;
 }
 
 

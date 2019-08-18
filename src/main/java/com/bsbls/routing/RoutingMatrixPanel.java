@@ -2,7 +2,6 @@ package com.bsbls.routing;
 
 import com.bsbls.routing.model.FilterDirection;
 import com.bsbls.routing.model.MatrixModel;
-import com.bsbls.spotlight.SpotlightPanel;
 import com.bsbls.test.GUITester;
 
 import javax.swing.*;
@@ -12,6 +11,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiPredicate;
+
+import static com.bsbls.routing.icons.RoutingIconTest.*;
 
 public class RoutingMatrixPanel extends MatrixPanel {
 
@@ -65,12 +67,25 @@ public class RoutingMatrixPanel extends MatrixPanel {
     }
 
     public void reset() {
+        reset((i, j) -> i == 0 || j == 0);
+    }
+
+    public void reset(BiPredicate<Integer, Integer> cellPredicate) {
+
         if (model != null) {
+            if(rxCell != null) {
+                rxCell.setSelected(true);
+            }
+
+            if(txCell != null) {
+                txCell.setSelected(true);
+            }
+
             Arrays.fill(model.getTx(), true);
             Arrays.fill(model.getRx(), true);
             for (int i = 0; i < noOfLinks; i++) {
                 for (int j = 0; j < noOfLinks; j++) {
-                    model.getMatrix()[i][j] = i == 0 || j == 0;
+                    model.getMatrix()[i][j] = cellPredicate.test(i, j);
                 }
             }
         }
@@ -374,39 +389,38 @@ public class RoutingMatrixPanel extends MatrixPanel {
 
         });
 
-        JButton resetModel = new JButton("Reset");
+
+        JPanel control = new JPanel(new GridBagLayout());
+
+        GridBagConstraints gc = new GridBagConstraints();
+
+        gc.gridx = 0;
+        gc.gridy = 0;
+        control.add(modelUpdate, gc);
 
 
-        JPanel control = new JPanel();
-
-        control.add(modelUpdate);
-
-        control.add(filterUpdate);
-
-        control.add(resetModel);
-
-        resetModel.addActionListener(e -> {
-            panel.reset();
-            EventQueue.invokeLater(() -> {
-                SpotlightPanel glass = new SpotlightPanel();
-                p.getRootPane().setGlassPane(glass);
-
-                JComponent component = control;
-                Point point = component.getLocationOnScreen();
-                SwingUtilities.convertPointFromScreen(point, p.getRootPane());
-                glass.addSpotlight(point.x - 1, point.y - 1, component.getWidth() + 2, component.getHeight() + 2);
-                if (timer != null) {
-                    timer.stop();
-                }
-                timer = new Timer(2000, null);
-
-                timer.addActionListener(ev -> glass.clearSpotlights());
-                timer.start();
-
-            });
+        gc.gridx++;
+        control.add(filterUpdate, gc);
 
 
-        });
+        gc.gridy++;
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+
+        buttonPanel.add(HOST_ONLY_BUTTON);
+        buttonPanel.add(ALL_BUTTON);
+        buttonPanel.add(NONE_BUTTON);
+        gc.gridx++;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.weightx = 1.0;
+        control.add(buttonPanel, gc);
+
+
+        ALL_BUTTON.addActionListener(e -> panel.reset((i, j) -> true));
+
+        NONE_BUTTON.addActionListener(e -> panel.reset((i, j) -> false));
+
+
+        HOST_ONLY_BUTTON.addActionListener(e -> panel.reset());
 
         p.add(control, BorderLayout.NORTH);
 
